@@ -13,6 +13,16 @@ CREATE TABLE IF NOT EXISTS users (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS tutorial_categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    slug VARCHAR(50) NOT NULL UNIQUE,
+    name_en VARCHAR(100) NOT NULL,
+    name_te VARCHAR(100) NOT NULL,
+    description_en VARCHAR(255) DEFAULT NULL,
+    description_te VARCHAR(255) DEFAULT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS tutorials (
     id INT AUTO_INCREMENT PRIMARY KEY,
     category VARCHAR(50) NOT NULL,
@@ -25,7 +35,36 @@ CREATE TABLE IF NOT EXISTS tutorials (
     display_order INT NOT NULL DEFAULT 0,
     icon VARCHAR(50) DEFAULT 'phone',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_category (category)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quiz_questions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    topic VARCHAR(100) NOT NULL DEFAULT 'Scam Awareness',
+    question_en TEXT NOT NULL,
+    question_te TEXT NOT NULL,
+    option_a_en VARCHAR(255) NOT NULL,
+    option_a_te VARCHAR(255) NOT NULL,
+    option_b_en VARCHAR(255) NOT NULL,
+    option_b_te VARCHAR(255) NOT NULL,
+    option_c_en VARCHAR(255) NOT NULL,
+    option_c_te VARCHAR(255) NOT NULL,
+    correct_option CHAR(1) NOT NULL DEFAULT 'B',
+    explanation_en TEXT NOT NULL,
+    explanation_te TEXT NOT NULL,
+    display_order INT NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS quiz_results (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT DEFAULT NULL,
+    score INT NOT NULL,
+    total_questions INT NOT NULL,
+    percentage DECIMAL(5,2) NOT NULL,
+    topic VARCHAR(100) NOT NULL,
+    completed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS help_requests (
@@ -44,15 +83,16 @@ CREATE TABLE IF NOT EXISTS help_requests (
     FOREIGN KEY (volunteer_id) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS quiz_results (
+CREATE TABLE IF NOT EXISTS request_assignments (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT DEFAULT NULL,
-    score INT NOT NULL,
-    total_questions INT NOT NULL,
-    percentage DECIMAL(5,2) NOT NULL,
-    topic VARCHAR(100) NOT NULL,
-    completed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+    request_id INT NOT NULL,
+    volunteer_id INT NOT NULL,
+    assigned_by INT DEFAULT NULL,
+    assigned_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    notes TEXT DEFAULT NULL,
+    FOREIGN KEY (request_id) REFERENCES help_requests(id) ON DELETE CASCADE,
+    FOREIGN KEY (volunteer_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (assigned_by) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS tutorial_progress (
@@ -66,9 +106,25 @@ CREATE TABLE IF NOT EXISTS tutorial_progress (
     FOREIGN KEY (tutorial_id) REFERENCES tutorials(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO tutorials (category, title_en, title_te, description_en, description_te, content_en, content_te, display_order, icon)
+INSERT INTO tutorial_categories (slug, name_en, name_te, description_en, description_te)
+VALUES
+('smartphone_basics', 'Smartphone Basics', 'స్మార్ట్‌ఫోన్ ప్రాథమికాంశాలు', 'Essential phone controls, calling, font resizing, and contacts', 'ప్రాథమిక ఫోన్ వాడకం, కాలింగ్, అక్షరాల పరిమాణం మరియు కాంటాక్ట్స్')
+ON DUPLICATE KEY UPDATE name_en=VALUES(name_en), name_te=VALUES(name_te);
+
+INSERT INTO tutorial_categories (slug, name_en, name_te, description_en, description_te)
+VALUES
+('digital_payments', 'Digital Payments', 'చెల్లింపుల భద్రత', 'Safe UPI transactions, OTP rules, and scanning QR codes', 'సురక్షితమైన UPI వాడకం, OTP నియమాలు మరియు QR కోడ్ భద్రత')
+ON DUPLICATE KEY UPDATE name_en=VALUES(name_en), name_te=VALUES(name_te);
+
+INSERT INTO tutorial_categories (slug, name_en, name_te, description_en, description_te)
+VALUES
+('scam_awareness', 'Scam Awareness', 'మోసాలపై అవగాహన', 'Identifying phishing calls, lottery messages, and remote access apps', 'నకిలీ కాల్స్, లాటరీ మోసాలు మరియు రిమోట్ యాప్స్ గుర్తించడం')
+ON DUPLICATE KEY UPDATE name_en=VALUES(name_en), name_te=VALUES(name_te);
+
+INSERT INTO tutorials (id, category, title_en, title_te, description_en, description_te, content_en, content_te, display_order, icon)
 VALUES
 (
+    1,
     'smartphone_basics',
     'Turning On, Unlocking, and Basic Gestures',
     'ఫోన్ ఆన్ చేయడం, అన్‌లాక్ చేయడం మరియు ప్రాథమిక సంజ్ఞలు',
@@ -80,6 +136,7 @@ VALUES
     'power'
 ),
 (
+    2,
     'smartphone_basics',
     'Saving New Contacts and Calling Family',
     'కొత్త ఫోన్ నంబర్లను సేవ్ చేయడం మరియు కాల్స్ చేయడం',
@@ -91,6 +148,7 @@ VALUES
     'user-plus'
 ),
 (
+    3,
     'smartphone_basics',
     'Connecting to Safe Home Wi-Fi',
     'సురక్షితమైన హోమ్ వై-ఫైకి కనెక్ట్ అవ్వడం',
@@ -102,79 +160,169 @@ VALUES
     'wifi'
 ),
 (
-    'smartphone_basics',
-    'Installing Safe Apps from Google Play Store',
-    'గూగుల్ ప్లే స్టోర్ నుండి సురక్షితమైన యాప్‌లను ఇన్‌స్టాల్ చేయడం',
-    'Download official, safe applications and avoid downloading unauthorized files from WhatsApp or SMS.',
-    'అధికారిక యాప్‌లను మాత్రమే డౌన్‌లోడ్ చేయడం మరియు వాట్సాప్ లేదా ఎస్సెమ్మెస్ లింక్‌ల ద్వారా ప్రమాదకరమైన ఫైళ్లను డౌన్‌లోడ్ చేయకుండా ఉండటం.',
-    'Step 1: Open the Google Play Store app (it has a colorful triangle icon).<br>Step 2: Tap the search bar at the top and type the name of the app (e.g. WhatsApp or BHIM).<br>Step 3: Check that the publisher name is verified and the app has millions of downloads.<br>Step 4: Tap the green Install button.<br>Step 5: Wait until it finishes, then tap Open.<br>Golden Rule: Never tap on APK download links sent by strangers via SMS or WhatsApp.',
-    'దశ 1: గూగుల్ ప్లే స్టోర్ (Google Play Store) యాప్‌ను తెరవండి.<br>దశ 2: పైభాగంలో ఉన్న సెర్చ్ బార్‌లో మీకు కావలసిన యాప్ పేరును టైప్ చేయండి.<br>దశ 3: యాప్ డెవలపర్ వివరాలు మరియు రేటింగ్‌లను పరిశీలించండి.<br>దశ 4: ఆకుపచ్చ రంగు ఇన్‌స్టాల్ (Install) బటన్‌ను నొక్కండి.<br>దశ 5: డౌన్‌లోడ్ పూర్తయిన తర్వాత ఓపెన్ నొక్కండి.<br>ముఖ్యమైన సూచన: వాట్సాప్ లేదా ఎస్సెమ్మెస్‌లో తెలియని వ్యక్తులు పంపే .apk ఫైళ్లను ఎట్టిపరిస్థితుల్లోనూ ఇన్‌స్టాల్ చేయవద్దు.',
     4,
-    'download'
-),
-(
     'smartphone_basics',
-    'Enlarging Font Size and Text for Easy Reading',
-    'స్పష్టంగా చదవడానికి అక్షరాల పరిమాణాన్ని పెద్దదిగా చేయడం',
-    'Make text, icons, and menus larger and clearer for relaxed reading without eye strain.',
-    'కంటిపై ఒత్తిడి లేకుండా సులభంగా చదవడానికి ఫాంట్ సైజు మరియు డిస్‌ప్లే సైజును పెంచుకోవడం.',
-    'Step 1: Open Settings on your phone (the gear icon).<br>Step 2: Scroll and tap on Display or Accessibility.<br>Step 3: Tap on Font size and style.<br>Step 4: Drag the slider circle to the right until the text appears large and comfortable.<br>Step 5: You can also enable High-contrast fonts or Bold text for even better clarity.',
-    'దశ 1: మీ ఫోన్‌లో సెట్టింగ్స్ (Settings) తెరవండి.<br>దశ 2: డిస్‌ప్లే (Display) లేదా యాక్సెసిబిలిటీ (Accessibility) ఎంపికపై నొక్కండి.<br>దశ 3: ఫాంట్ సైజ్ (Font size) పై ట్యాప్ చేయండి.<br>దశ 4: అక్షరాలు మీకు సరిపడేంత పెద్దవిగా అయ్యే వరకు స్లైడర్‌ను కుడివైపుకి జరపండి.<br>దశ 5: స్పష్టత కోసం బోల్డ్ టెక్స్ట్ (Bold text) ఆప్షన్‌ను కూడా ఆన్ చేసుకోవచ్చు.',
+    'Making Screen Text Larger and High Contrast',
+    'స్క్రీన్ అక్షరాల పరిమాణం పెంచడం మరియు హై కాంట్రాస్ట్',
+    'Enlarge fonts across all your apps so you can read messages comfortably without eye strain.',
+    'మీ కళ్లపై భారం పడకుండా అన్ని యాప్‌లలోని అక్షరాలను పెద్దవిగా మరియు స్పష్టంగా కనిపించేలా చేయడం.',
+    'Step 1: Open the Settings app (gear icon).<br>Step 2: Tap on Display or Accessibility.<br>Step 3: Tap Font Size and Display Size.<br>Step 4: Drag the slider to the right towards Large or Largest.<br>Step 5: Toggle High-Contrast Text to ON for sharp letters.',
+    'దశ 1: మీ ఫోన్ సెట్టింగ్స్ (Settings) యాప్‌ను తెరవండి.<br>దశ 2: డిస్‌ప్లే (Display) లేదా యాక్సెసిబిలిటీ (Accessibility) పై నొక్కండి.<br>దశ 3: ఫాంట్ సైజు (Font Size) ఎంపికను తాకండి.<br>దశ 4: స్లైడర్‌ను కుడి వైపుకు జరిపి అక్షరాల పరిమాణాన్ని పెంచండి.<br>దశ 5: అక్షరాలు మరింత స్పష్టంగా కనిపించడానికి హై-కాంట్రాస్ట్ టెక్స్ట్ ఆన్ చేయండి.',
+    4,
+    'type'
+),
+(
     5,
-    'eye'
+    'digital_payments',
+    'Understanding UPI and Paying Safely at Shops',
+    'UPI అర్థం చేసుకోవడం మరియు దుకాణాల్లో సురక్షితంగా చెల్లించడం',
+    'Learn how Google Pay, PhonePe, and Paytm work when buying groceries or medicine.',
+    'కిరాణా దుకాణాలు మరియు మందుల షాపుల్లో గూగుల్ పే, ఫోన్‌పే సురక్షితంగా ఎలా వాడాలో నేర్చుకోండి.',
+    'Step 1: Open your trusted UPI app (PhonePe or Google Pay).<br>Step 2: Tap Scan QR Code.<br>Step 3: Point your camera at the shopkeepers official printed QR standee.<br>Step 4: Verify the merchant name on screen and type the exact bill amount.<br>Step 5: Enter your confidential 4 or 6-digit UPI PIN.<br>Golden Rule: Never enter your PIN to receive payments. PIN is only for sending money.',
+    'దశ 1: మీ ఫోన్‌పే లేదా గూగుల్ పే యాప్‌ను తెరవండి.<br>దశ 2: స్కాన్ QR కోడ్ (Scan QR) గుర్తుపై నొక్కండి.<br>దశ 3: దుకాణదారుడి QR కోడ్‌పై మీ ఫోన్ కెమెరాను చూపించండి.<br>దశ 4: స్క్రీన్‌పై కనిపించే దుకాణం పేరు సరిచూసి, బిల్లు మొత్తాన్ని టైప్ చేయండి.<br>దశ 5: మీ రహస్య 4 లేదా 6 అంకెల UPI పిన్‌ను నమోదు చేయండి.<br>ముఖ్య గమనిక: డబ్బులు స్వీకరించడానికి ఎప్పుడూ పిన్ నొక్కవద్దు. డబ్బు పంపడానికి మాత్రమే పిన్ అవసరం.',
+    5,
+    'credit-card'
 ),
 (
-    'digital_payments',
-    'Golden Rules of UPI: Receiving Money Never Requires a PIN',
-    'UPI గోల్డెన్ రూల్: డబ్బులు అందుకోవడానికి పిన్ అవసరం లేదు',
-    'Crucial payment safety rules every senior citizen must know before using phone payment apps.',
-    'ఆన్‌లైన్ చెల్లింపుల యాప్‌లు ఉపయోగించేటప్పుడు ప్రతి సీనియర్ సిటిజన్ తప్పక తెలుసుకోవలసిన కీలక భద్రతా నియమాలు.',
-    'Rule 1: UPI PIN is ONLY needed when SENDING or DEDUCTING money from your bank account.<br>Rule 2: If someone claims they are sending you money, lottery prizes, or government pension and asks you to enter your UPI PIN, IT IS A SCAM.<br>Rule 3: Scanning a QR code is for paying someone, NEVER for receiving money.<br>Rule 4: Never click on Collect Request notifications from unknown callers.<br>Rule 5: Keep your daily transaction limit modest for peace of mind.',
-    'నియమం 1: మీ బ్యాంక్ ఖాతా నుండి డబ్బు పంపేటప్పుడు మాత్రమే UPI PIN అవసరం.<br>నియమం 2: ఎవరైనా మీకు డబ్బు పంపుతున్నామని లేదా పెన్షన్ వేస్తున్నామని చెప్పి పిన్ నొక్కమంటే అది 100 శాతం మోసం.<br>నియమం 3: QR కోడ్ స్కాన్ చేయడం అనేది చెల్లింపు చేయడానికి మాత్రమే, డబ్బు అందుకోవడానికి కాదు.<br>నియమం 4: తెలియని నంబర్ల నుండి వచ్చే పేమెంట్ రిక్వెస్ట్‌లను తిరస్కరించండి.<br>నియమం 5: అనుమానం వస్తే వెంటనే బ్యాంక్‌కు లేదా 1930 నంబర్‌కు తెలియజేయండి.',
     6,
-    'shield-check'
-),
-(
     'digital_payments',
-    'Why OTP, Passwords, and UPI PINs Must Never Be Shared',
-    'OTP, పాస్‌వర్డ్ మరియు UPI పిన్ ఎవరికీ ఎందుకు చెప్పకూడదు',
-    'Understand why genuine bank staff never ask for OTP or PIN numbers over phone calls.',
-    'బ్యాంక్ మేనేజర్లు లేదా అధికారులు ఎవరూ ఫోన్ చేసి మీ ఓటీపీ లేదా పిన్ అడగరని తెలుసుకోండి.',
-    'Fact 1: OTP stands for One-Time Password. It acts as the digital key to your bank safe.<br>Fact 2: Bank employees, police, electricity department, or pension officers will NEVER ask for your OTP.<br>Fact 3: If a caller threatens that your SIM card, electricity connection, or bank account will be blocked unless you share an OTP, disconnect the call immediately.<br>Fact 4: Never read OTP messages aloud to anyone on a phone call.<br>Fact 5: If in doubt, visit your local bank branch directly with a trusted family member.',
-    'నిజం 1: OTP అనేది మీ డిజిటల్ తాళం లాంటిది. దాన్ని ఎవరికీ తెలియజేయకూడదు.<br>నిజం 2: బ్యాంక్ మేనేజర్, పోలీస్ లేదా ప్రభుత్వ అధికారులు ఎవరూ ఫోన్ చేసి ఓటీపీ అడగరు.<br>నిజం 3: ఓటీపీ చెప్పకపోతే మీ కరెంట్ కట్ అవుతుంది లేదా బ్యాంక్ బ్లాక్ అవుతుంది అని బెదిరిస్తే వెంటనే ఫోన్ కట్ చేయండి.<br>నిజం 4: ఫోన్ మాట్లాడుతున్నప్పుడు ఎటువంటి నంబర్లను ఎవరికీ చదివి వినిపించవద్దు.<br>నిజం 5: ఏదైనా సందేహం ఉంటే మీ కుటుంబ సభ్యులతో కలిసి నేరుగా బ్యాంక్ బ్రాంచ్‌కి వెళ్లండి.',
-    7,
-    'lock'
+    'Never Share OTP with Anyone Calling You',
+    'ఫోన్ కాల్స్‌లో OTPని ఎవరితోనూ పంచుకోవద్దు',
+    'Why OTP is like your house key and how bank fraudsters trick elders into revealing it.',
+    'OTP అంటే ఏమిటి మరియు బ్యాంక్ అధికారుల పేరుతో వచ్చే నకిలీ కాల్స్‌కు ఎందుకు చెప్పకూడదో తెలుసుకోండి.',
+    'Rule 1: An OTP (One Time Password) is sent to confirm a payment or account change.<br>Rule 2: Real bank managers will NEVER ask you for an OTP over telephone calls.<br>Rule 3: If anyone claims your pension will stop unless you tell them an SMS code, hang up immediately.<br>Rule 4: Call your local bank branch directly if you have any doubts.',
+    'నియమం 1: OTP అనేది మీ బ్యాంక్ ఖాతా లాకర్ తాళం లాంటిది.<br>నియమం 2: నిజమైన బ్యాంక్ సిబ్బంది ఫోన్ కాల్స్‌లో ఎప్పుడూ OTP అడగరు.<br>నియమం 3: పెన్షన్ ఆగిపోతుందని బెదిరించి OTP అడిగితే వెంటనే కాల్ కట్ చేయండి.<br>నియమం 4: ఏదైనా సందేహం ఉంటే నేరుగా మీ బ్యాంక్ బ్రాంచ్‌కు వెళ్లండి.',
+    6,
+    'shield-alert'
 ),
 (
+    7,
     'scam_awareness',
-    'Recognizing Fake Customer Care Numbers and Search Traps',
-    'నకిలీ కస్టమర్ కేర్ నంబర్లు మరియు సెర్చ్ ఇంజిన్ మోసాలను గుర్తించడం',
-    'Why you should never trust phone numbers found directly on Google search results.',
-    'గూగుల్ లేదా ఇంటర్నెట్ సెర్చ్‌లో కనిపించే నంబర్లను గుడ్డిగా నమ్మి మోసపోకుండా ఉండటం.',
-    'Scenario: You have an issue with gas booking, courier, or train ticket. You search on Google and call the first number listed.<br>Danger: Cybercriminals upload their own phone numbers as fake customer care desks.<br>What they do: They ask you to install apps like AnyDesk, TeamViewer, or send 10 rupees.<br>Safe Action: Always find customer care numbers only inside official mobile apps or on official physical bills/passbooks.<br>Never allow anyone to access your screen remotely.',
-    'సన్నివేశం: గ్యాస్ సిలిండర్ లేదా కొరియర్ సమస్య కోసం గూగుల్‌లో సెర్చ్ చేసి నంబర్‌కు కాల్ చేయడం.<br>ప్రమాదం: సైబర్ నేరగాళ్లు గూగుల్‌లో తమ సొంత నంబర్లను నకిలీ కస్టమర్ కేర్‌గా నమోదు చేస్తారు.<br>వారి మోసం: మీ సమస్య పరిష్కరిస్తామని చెప్పి ఏదైనా యాప్ ఇన్‌స్టాల్ చేయమని లేదా 10 రూపాయలు పంపమని అడుగుతారు.<br>రక్షణ మార్గం: ఎల్లప్పుడూ అధికారిక యాప్‌లు లేదా మీ ఒరిజినల్ రశీదులపై ఉన్న నంబర్లను మాత్రమే సంప్రదించండి.<br>ఎవరికీ మీ స్క్రీన్‌ను రిమోట్ యాక్సెస్ ఇవ్వకండి.',
-    8,
+    'Spotting Fake Electricity Bill Threat SMS',
+    'నకిలీ విద్యుత్ బిల్లు బెదిరింపు మెసేజ్‌లను గుర్తించడం',
+    'Protect yourself against the widespread fake power disconnection SMS scam.',
+    'ఈ రాత్రి కరెంట్ కట్ అవుతుందనే సైబర్ నేరగాళ్ల నకిలీ సందేశాలను ఎలా గుర్తించాలో తెలుసుకోండి.',
+    'Warning Signs:<br>1. Message comes from a normal 10-digit mobile number, not official department headers like APCPDCL.<br>2. Threatens disconnection tonight at 9:30 PM.<br>3. Demands you call an unknown cell number.<br>What To Do: Ignore the message. Electricity offices never send threatening SMS from private numbers.',
+    'హెచ్చరిక సంకేతాలు:<br>1. సందేశం ఒక సాధారణ 10 అంకెల మొబైల్ నంబర్ నుండి వస్తుంది.<br>2. ఈ రాత్రికే కరెంట్ కట్ అవుతుందని భయపెడతారు.<br>3. ఒక వ్యక్తిగత నంబర్‌కు కాల్ చేయమని ఒత్తిడి తెస్తారు.<br>మీరు ఏమి చేయాలి: ఆ సందేశాన్ని తొలగించండి. విద్యుత్ శాఖ ఎప్పుడూ వ్యక్తిగత నంబర్ల నుండి ఇలాంటి మెసేజ్‌లు పంపదు.',
+    7,
     'alert-triangle'
 ),
 (
+    8,
     'scam_awareness',
-    'Electricity Bill and Pension Cut-off SMS Scams',
-    'కరెంట్ బిల్లు మరియు పెన్షన్ ఆగిపోతుందనే నకిలీ ఎస్సెమ్మెస్‌లు',
-    'Identify threatening SMS messages sent from personal mobile numbers demanding urgent action.',
-    'వ్యక్తిగత మొబైల్ నంబర్ల నుండి వచ్చే బెదిరింపు ఎస్సెమ్మెస్‌లను గుర్తించి జాగ్రత్తపడటం.',
-    'Typical Message: "Dear Consumer, your electricity power will be disconnected tonight at 9:30 PM because your previous bill was not updated. Call electricity officer at 98xxxxxx."<br>How to spot fraud:<br>1. Official government messages come from sender headers like APCPDCL, TSSPDCL, not from 10-digit mobile numbers.<br>2. Real departments do not disconnect power without formal written notices.<br>3. They will instruct you to install an APK file. Never install it.<br>Action: Report the sender number immediately on the 1930 cyber portal.',
-    'సాధారణ మోసపూరిత మెసేజ్: "గౌరవనీయ వినియోగదారుడా, మీ విద్యుత్ బిల్లు అప్‌డేట్ కాలేదు కాబట్టి ఈ రాత్రి 9:30కి మీ కరెంట్ కట్ చేయబడుతుంది. వెంటనే ఈ ఆఫీసర్ నంబర్‌కు కాల్ చేయండి."<br>మోసాన్ని గుర్తించడం ఎలా:<br>1. ప్రభుత్వ విద్యుత్ సంస్థల మెసేజ్‌లు అధికారిక హెడర్లతో వస్తాయి, 10 అంకెల సాధారణ నంబర్ల నుండి రావు.<br>2. వ్రాతపూర్వక నోటీసు లేకుండా ఏ విభాగం కూడా అకస్మాత్తుగా కనెక్షన్ కట్ చేయదు.<br>3. వారు లింక్ పంపి యాప్ డౌన్‌లోడ్ చేయమంటారు. ఎట్టిపరిస్థితుల్లోనూ చేయవద్దు.<br>చేయవలసిన పని: వెంటనే ఈ మెసేజ్‌ను విస్మరించండి లేదా 1930కి ఫిర్యాదు చేయండి.',
-    9,
-    'zap-off'
+    'Say NO to AnyDesk and Screen-Sharing Apps',
+    'AnyDesk మరియు స్క్రీన్ షేరింగ్ యాప్‌లను తిరస్కరించండి',
+    'Understand how fraudsters use AnyDesk to see your screen and siphon your savings.',
+    'AnyDesk వంటి యాప్‌లను ఇన్‌స్టాల్ చేయమని అడిగే కాల్స్ పట్ల ఎలా అప్రమత్తంగా ఉండాలో తెలుసుకోండి.',
+    'What Fraudsters Say: "Sir, install AnyDesk or QuickSupport so our technician can fix your phone bank app."<br>The Reality: These apps allow strangers to watch everything you type on your screen, including passwords and banking OTPs.<br>Golden Rule: Never install AnyDesk or TeamViewer based on phone caller instructions.',
+    'మోసగాళ్లు చెప్పే మాటలు: "సార్, మీ ఫోన్ లేదా బ్యాంక్ సమస్యను సరిచేయడానికి AnyDesk యాప్ ఇన్‌స్టాల్ చేయండి."<br>వాస్తవం: ఈ యాప్ ఇన్‌స్టాల్ చేస్తే మీ ఫోన్ స్క్రీన్ వారికి కనిపిస్తుంది. మీ పాస్‌వర్డ్‌లు, OTPలు దొంగిలిస్తారు.<br>బంగారు నియమం: ఫోన్ కాల్స్‌లో ఎవరైనా చెబితే ఎట్టిపరిస్థితుల్లోనూ AnyDesk లేదా TeamViewer యాప్‌లను డౌన్‌లోడ్ చేయకండి.',
+    8,
+    'eye-off'
+)
+ON DUPLICATE KEY UPDATE
+    category=VALUES(category),
+    title_en=VALUES(title_en),
+    title_te=VALUES(title_te),
+    description_en=VALUES(description_en),
+    description_te=VALUES(description_te),
+    content_en=VALUES(content_en),
+    content_te=VALUES(content_te),
+    display_order=VALUES(display_order),
+    icon=VALUES(icon);
+
+INSERT INTO quiz_questions (id, topic, question_en, question_te, option_a_en, option_a_te, option_b_en, option_b_te, option_c_en, option_c_te, correct_option, explanation_en, explanation_te, display_order)
+VALUES
+(
+    1,
+    'Electricity Bill Scam',
+    'You receive an SMS saying your electricity power will be disconnected at 9:30 PM tonight unless you call an unknown mobile number immediately. What should you do?',
+    'ఈ రాత్రి 9:30 గంటలకు మీ విద్యుత్ కనెక్షన్ కట్ చేయబడుతుందని, వెంటనే ఒక మొబైల్ నంబర్‌కు కాల్ చేయాలని ఎస్సెమ్మెస్ వచ్చింది. మీరు ఏమి చేయాలి?',
+    'Call the mobile number immediately and follow their instructions',
+    'వెంటనే ఆ నంబర్‌కు కాల్ చేసి వారు చెప్పినట్లు చేయాలి',
+    'Ignore the SMS and do not call - official departments never send personal cell phone numbers for disconnections',
+    'ఆ మెసేజ్‌ను విస్మరించాలి - ప్రభుత్వ విద్యుత్ సంస్థలు వ్యక్తిగత సెల్ నంబర్ల నుండి ఇలాంటి బెదిరింపు మెసేజ్‌లు పంపవు',
+    'Install whatever app they ask you to download to pay 10 rupees',
+    '10 రూపాయల బిల్లు చెల్లించడానికి వారు పంపే లింక్ ద్వారా యాప్ డౌన్‌లోడ్ చేయాలి',
+    'B',
+    'Correct! Electricity departments never send threat SMS from 10-digit mobile numbers demanding you call a personal number. This is a common cyber fraud.',
+    'సరైన సమాధానం! ప్రభుత్వ విద్యుత్ శాఖలు ఎప్పుడూ 10 అంకెల మొబైల్ నంబర్ల ద్వారా విద్యుత్ నిలిపివేత మెసేజ్‌లు పంపవు. ఇది సాధారణ సైబర్ మోసం.',
+    1
 ),
 (
-    'scam_awareness',
-    'Remote Access Apps Scam: Never Install AnyDesk or QuickSupport for Strangers',
-    'రిమోట్ యాక్సెస్ యాప్‌ల మోసం: AnyDesk లేదా TeamViewer ఎప్పుడూ ఇన్‌స్టాల్ చేయవద్దు',
-    'Understand how fraudsters see your phone screen and steal banking passwords through screen sharing.',
-    'మోసగాళ్లు మీ ఫోన్ స్క్రీన్‌ను చూస్తూ బ్యాంక్ పాస్‌వర్డ్‌లను ఎలా దొంగిలిస్తారో తెలుసుకోండి.',
-    'What is Remote Access? Apps like AnyDesk, TeamViewer QuickSupport, or RustDesk allow someone elsewhere to see your screen and control your phone.<br>The Scam: Fraudsters pose as bank officers, KYC executives, or courier delivery agents. They ask you to install one of these apps to "assist you".<br>The Result: Once installed, they ask for a 9-digit code. If you share it, they can see your bank account number, read your OTPs on screen, and steal your money.<br>Protection: NEVER install any application suggested by an incoming phone caller.',
-    'రిమోట్ యాక్సెస్ అంటే ఏమిటి? AnyDesk, TeamViewer లేదా QuickSupport వంటి యాప్‌లు వేరే చోట ఉన్నవారికి మీ ఫోన్ స్క్రీన్‌ను చూసేందుకు అనుమతిస్తాయి.<br>మోసం జరిగే విధానం: సైబర్ నేరగాళ్లు తాము బ్యాంక్ అధికారులమని లేదా కేవైసీ ఏజెంట్లమని నమ్మించి ఈ యాప్‌లను ఇన్‌స్టాల్ చేయమని చెబుతారు.<br>ఫలితం: యాప్ ఓపెన్ చేయగానే కనిపించే 9 అంకెల కోడ్‌ను మీరు వారికి చెబితే, మీ ఫోన్ స్క్రీన్ మొత్తం వారికి కనిపిస్తుంది. వారు మీ బ్యాంక్ లావాదేవీలు మరియు ఓటీపీలను చూసి డబ్బు లాగేసుకుంటారు.<br>భద్రతా సూత్రం: ఫోన్ కాల్‌లో ఎవరైనా యాప్ డౌన్‌లోడ్ చేయమంటే వెంటనే కాల్ కట్ చేయండి.',
-    10,
-    'smartphone'
-);
+    2,
+    'UPI QR Code Scam',
+    'A caller claims you have won 50,000 rupees in a lucky draw and asks you to scan a QR code and enter your UPI PIN to receive the money. What should you do?',
+    'మీకు లక్కీ డ్రాలో రూ. 50,000 నగదు బహుమతి వచ్చిందని, డబ్బులు అందుకోవడానికి QR కోడ్ స్కాన్ చేసి UPI పిన్ నొక్కమని కాల్ వచ్చింది. మీరు ఏమి చేయాలి?',
+    'Scan the QR code and enter UPI PIN right away',
+    'వెంటనే QR కోడ్ స్కాన్ చేసి మీ UPI పిన్ ఎంటర్ చేయాలి',
+    'Disconnect the call immediately - receiving money NEVER requires entering your UPI PIN',
+    'వెంటనే ఫోన్ కట్ చేయాలి - డబ్బులు అందుకోవడానికి ఎప్పుడూ UPI పిన్ అవసరం లేదు',
+    'Ask a family member to enter their UPI PIN instead',
+    'మీ కుటుంబ సభ్యుల ఫోన్ నుండి పిన్ నొక్కాలి',
+    'B',
+    'Correct! The golden rule of UPI: Entering your UPI PIN always DEDUCTS money from your bank account. Receiving money never needs a PIN.',
+    'సరైన సమాధానం! UPI గోల్డెన్ రూల్: మీ బ్యాంక్ ఖాతా నుండి డబ్బు కట్ కావడానికి మాత్రమే పిన్ అవసరం. ఎవరైనా డబ్బు పంపుతుంటే పిన్ ఎంటర్ చేయాల్సిన పని లేదు.',
+    2
+),
+(
+    3,
+    'Remote Screen Sharing',
+    'Someone calls claiming to be from your bank customer care and asks you to install AnyDesk or QuickSupport on your phone to solve your problem. What is the right response?',
+    'బ్యాంక్ కస్టమర్ కేర్ నుండి మాట్లాడుతున్నామని చెప్పి, మీ సమస్య పరిష్కారం కోసం AnyDesk లేదా QuickSupport యాప్ డౌన్‌లోడ్ చేయమని ఒక వ్యక్తి అడిగితే మీరు ఏమి చేయాలి?',
+    'Never install AnyDesk or screen-sharing apps for callers - they can see your phone screen and steal your passwords',
+    'ఎట్టిపరిస్థితుల్లోనూ AnyDesk లేదా స్క్రీన్ షేరింగ్ యాప్‌లను డౌన్‌లోడ్ చేయకూడదు - అవి మీ ఫోన్ పాస్‌వర్డ్‌లను దొంగిలిస్తాయి',
+    'Install it immediately since the caller sounds polite',
+    'వారు మర్యాదగా మాట్లాడుతున్నారు కాబట్టి వెంటనే ఇన్‌స్టాల్ చేయాలి',
+    'Install it and give them the 9-digit access code',
+    'ఇన్‌స్టాల్ చేసి అందులో కనిపించే 9 అంకెల కోడ్‌ను వారికి చెప్పాలి',
+    'A',
+    'Correct! AnyDesk and QuickSupport allow scammers to remotely control your phone, read your passwords, and view incoming OTPs.',
+    'సరైన సమాధానం! AnyDesk మరియు TeamViewer వంటి యాప్‌ల ద్వారా సైబర్ నేరగాళ్లు మీ ఫోన్ స్క్రీన్‌ను నేరుగా చూస్తూ మీ OTPలు మరియు బ్యాంక్ వివరాలను దొంగిలిస్తారు.',
+    3
+),
+(
+    4,
+    'Phishing & KYC Fraud',
+    'You receive a message saying: Your Bank account or PAN card is blocked. Click this link immediately to update KYC. What should you do?',
+    'మీ పాన్ కార్డు లేదా బ్యాంక్ ఖాతా బ్లాక్ చేయబడింది. వెంటనే ఈ లింక్ క్లిక్ చేసి KYC అప్‌డేట్ చేయండి అని వచ్చిన మెసేజ్‌కు మీరు ఏమి చేయాలి?',
+    'Click the link and type your debit card number and PIN',
+    'లింక్ ఓపెన్ చేసి డెబిట్ కార్డు నంబర్ మరియు పిన్ ఎంటర్ చేయాలి',
+    'Do not click the link - delete the message or visit your bank branch directly',
+    'ఆ లింక్‌ను ఎప్పుడూ క్లిక్ చేయకూడదు - నేరుగా మీ బ్యాంక్ శాఖను సంప్రదించాలి',
+    'Forward the message to your friends',
+    'ఆ లింక్‌ను బంధువులకు ఫార్వర్డ్ చేయాలి',
+    'B',
+    'Correct! Banks never send unknown links asking for sensitive debit card or internet banking credentials.',
+    'సరైన సమాధానం! బ్యాంకులు ఎప్పుడూ అనామక లింక్‌ల ద్వారా వ్యక్తిగత లేదా కార్డ్ వివరాలను అడగవు.',
+    4
+),
+(
+    5,
+    'ATM Safety',
+    'A friendly stranger at an ATM machine offers to help you withdraw money and asks for your 4-digit ATM PIN. What should you do?',
+    'ATM వద్ద ఒక తెలియని వ్యక్తి మీకు డబ్బులు తీసిపెడతానని చెప్పి మీ 4 అంకెల ATM పిన్ అడిగితే మీరు ఏమి చేయాలి?',
+    'Tell them the PIN so they can press the buttons for you',
+    'వారు బటన్లు నొక్కడానికి పిన్ నంబర్ వారికి చెప్పాలి',
+    'Politely refuse and never share your ATM PIN with any stranger - ask only bank security or a trusted family member',
+    'మర్యాదగా నిరాకరించాలి - మీ ATM పిన్ ఎవరితోనూ పంచుకోకూడదు, కేవలం కుటుంబ సభ్యుల సహాయం మాత్రమే తీసుకోవాలి',
+    'Write your PIN on the back of your card',
+    'కార్డు వెనుక పిన్ నంబర్ రాసి ఉంచాలి',
+    'B',
+    'Correct! Never disclose your ATM PIN to strangers. Always guard the keypad with your hand when entering your PIN.',
+    'సరైన సమాధానం! ATM పిన్ అనేది రహస్యమైనది. ఎట్టిపరిస్థితుల్లోనూ ఇతరులకు చెప్పకూడదు.',
+    5
+)
+ON DUPLICATE KEY UPDATE
+    topic=VALUES(topic),
+    question_en=VALUES(question_en),
+    question_te=VALUES(question_te),
+    option_a_en=VALUES(option_a_en),
+    option_a_te=VALUES(option_a_te),
+    option_b_en=VALUES(option_b_en),
+    option_b_te=VALUES(option_b_te),
+    option_c_en=VALUES(option_c_en),
+    option_c_te=VALUES(option_c_te),
+    correct_option=VALUES(correct_option),
+    explanation_en=VALUES(explanation_en),
+    explanation_te=VALUES(explanation_te),
+    display_order=VALUES(display_order);

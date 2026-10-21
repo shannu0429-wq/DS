@@ -38,21 +38,45 @@
 
             <nav class="main-navigation" id="mainNavigation">
                 <a href="{{ url_for('index') }}" class="nav-link {% if request.path == '/' %}active{% endif %}">{{ t('nav_home') }}</a>
-                <a href="{{ url_for('tutorials') }}" class="nav-link {% if '/tutorials' in request.path %}active{% endif %}">{{ t('nav_tutorials') }}</a>
-                <a href="{{ url_for('payment_safety') }}" class="nav-link {% if request.path == '/payment-safety' %}active{% endif %}">{{ t('nav_payments') }}</a>
-                <a href="{{ url_for('scam_awareness') }}" class="nav-link {% if request.path == '/scam-awareness' %}active{% endif %}">{{ t('nav_scams') }}</a>
-                <a href="{{ url_for('request_help') }}" class="nav-link {% if request.path == '/request-help' or request.path == '/help-history' %}active{% endif %}">{{ t('nav_request_help') }}</a>
                 <a href="{{ url_for('about') }}" class="nav-link {% if request.path == '/about' %}active{% endif %}">{{ t('nav_about') }}</a>
+                <a href="{{ url_for('tutorials') }}" class="nav-link {% if request.path == '/tutorials' %}active{% endif %}">{{ t('nav_learn') }}</a>
+
+                <div class="nav-dropdown">
+                    <button type="button" class="nav-dropdown-toggle nav-link {% if request.path in ['/smartphone-basics', '/payment-safety', '/scam-awareness', '/quiz'] %}active{% endif %}">
+                        {{ t('nav_digital_safety') }} &#9662;
+                    </button>
+                    <div class="nav-dropdown-menu">
+                        <a href="{{ url_for('smartphone_basics') }}" class="dropdown-item {% if request.path == '/smartphone-basics' %}active{% endif %}">{{ t('nav_smartphone_basics') }}</a>
+                        <a href="{{ url_for('payment_safety') }}" class="dropdown-item {% if request.path == '/payment-safety' %}active{% endif %}">{{ t('nav_payments') }}</a>
+                        <a href="{{ url_for('scam_awareness') }}" class="dropdown-item {% if request.path == '/scam-awareness' %}active{% endif %}">{{ t('nav_scams') }}</a>
+                        <a href="{{ url_for('quiz_page') }}" class="dropdown-item {% if request.path == '/quiz' %}active{% endif %}">{{ t('nav_quiz') }}</a>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('request_help') }}" class="nav-link {% if request.path == '/request-help' %}active{% endif %}">{{ t('nav_request_help') }}</a>
                 <a href="{{ url_for('contact') }}" class="nav-link {% if request.path == '/contact' %}active{% endif %}">{{ t('nav_contact') }}</a>
 
                 {% if is_auth %}
                     {% if current_user.role == 'admin' %}
-                        <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if '/admin' in request.path %}active{% endif %}" style="background-color: #EDE7F6; color: #4A148C !important;">{{ t('nav_admin_panel') }}</a>
+                        <div class="nav-dropdown">
+                            <button type="button" class="nav-dropdown-toggle nav-link {% if '/admin' in request.path %}active{% endif %}" style="background-color: #EDE7F6; color: #4A148C !important;">
+                                {{ t('nav_admin_panel') }} &#9662;
+                            </button>
+                            <div class="nav-dropdown-menu">
+                                <a href="{{ url_for('admin_dashboard') }}" class="dropdown-item">{{ t('nav_admin_panel') }}</a>
+                                <a href="{{ url_for('manage_users') }}" class="dropdown-item">{{ t('nav_manage_users') }}</a>
+                                <a href="{{ url_for('manage_tutorials') }}" class="dropdown-item">{{ t('nav_manage_tutorials') }}</a>
+                                <a href="{{ url_for('admin_requests') }}" class="dropdown-item">{{ t('nav_manage_requests') }}</a>
+                                <a href="{{ url_for('manage_categories') }}" class="dropdown-item">{{ t('nav_manage_categories') }}</a>
+                            </div>
+                        </div>
                     {% elif current_user.role == 'volunteer' %}
                         <a href="{{ url_for('volunteer_dashboard') }}" class="nav-link {% if '/volunteer' in request.path %}active{% endif %}" style="background-color: #E8F5E9; color: #1B5E20 !important;">{{ t('nav_volunteer_portal') }}</a>
                     {% else %}
                         <a href="{{ url_for('dashboard') }}" class="nav-link {% if request.path == '/dashboard' %}active{% endif %}" style="background-color: #E3F2FD; color: #0D47A1 !important;">{{ t('nav_dashboard') }}</a>
+                        <a href="{{ url_for('help_history') }}" class="nav-link {% if request.path == '/help-history' %}active{% endif %}">{{ t('nav_my_requests') }}</a>
                     {% endif %}
+                    <a href="{{ url_for('profile') }}" class="nav-link {% if request.path == '/profile' %}active{% endif %}">{{ t('nav_profile') }}</a>
                     <a href="{{ url_for('logout') }}" class="btn btn-outline btn-sm">{{ t('nav_logout') }}</a>
                 {% else %}
                     <a href="{{ url_for('login') }}" class="nav-link">{{ t('nav_login') }}</a>
@@ -91,21 +115,19 @@
             <div class="footer-brand">
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="DigitalSaathi Logo" class="footer-logo">
                 <p class="footer-desc">{{ t('footer_about_text') }}</p>
-                <div style="font-size: 0.95rem; color: #E2E8F0;">
-                    <strong>Institution:</strong> Vasireddy Venkatadri Institute of Technology (VVIT)<br>
-                    <strong>Academic Year:</strong> 3-1 Community Service Project (CSP)
-                </div>
             </div>
 
             <div class="footer-col">
                 <h4>{{ t('footer_quick_links') }}</h4>
                 <ul class="footer-links">
                     <li><a href="{{ url_for('index') }}">{{ t('nav_home') }}</a></li>
-                    <li><a href="{{ url_for('tutorials') }}">{{ t('nav_tutorials') }}</a></li>
+                    <li><a href="{{ url_for('about') }}">{{ t('nav_about') }}</a></li>
+                    <li><a href="{{ url_for('tutorials') }}">{{ t('nav_learn') }}</a></li>
+                    <li><a href="{{ url_for('smartphone_basics') }}">{{ t('nav_smartphone_basics') }}</a></li>
                     <li><a href="{{ url_for('payment_safety') }}">{{ t('nav_payments') }}</a></li>
                     <li><a href="{{ url_for('scam_awareness') }}">{{ t('nav_scams') }}</a></li>
+                    <li><a href="{{ url_for('quiz_page') }}">{{ t('nav_quiz') }}</a></li>
                     <li><a href="{{ url_for('request_help') }}">{{ t('nav_request_help') }}</a></li>
-                    <li><a href="{{ url_for('about') }}">{{ t('nav_about') }}</a></li>
                     <li><a href="{{ url_for('contact') }}">{{ t('nav_contact') }}</a></li>
                 </ul>
             </div>
@@ -115,7 +137,7 @@
                 <ul class="footer-links">
                     <li><strong style="color: #FFE082;">National Cyber Crime:</strong> 1930</li>
                     <li><strong style="color: #FFE082;">Cybercrime Portal:</strong> <a href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a></li>
-                    <li><strong style="color: #FFE082;">Senior Helpline:</strong> 14567</li>
+                    <li><strong style="color: #FFE082;">Senior Citizen Helpline:</strong> 14567</li>
                     <li><strong style="color: #FFE082;">Emergency Service:</strong> 112</li>
                 </ul>
                 <div style="margin-top: 20px;">

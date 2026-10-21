@@ -1,18 +1,24 @@
 const CLIENT_TRANSLATIONS = {
     'en': {
         'nav_home': 'Home',
-        'nav_tutorials': 'Smartphone Basics',
+        'nav_about': 'About',
+        'nav_learn': 'Learn',
+        'nav_tutorials': 'Tutorials',
+        'nav_smartphone_basics': 'Smartphone Basics',
+        'nav_digital_safety': 'Digital Safety',
         'nav_payments': 'Payment Safety',
         'nav_scams': 'Scam Awareness',
+        'nav_quiz': 'Safety Quiz',
         'nav_request_help': 'Request Help',
-        'nav_about': 'About Project',
         'nav_contact': 'Contact Us',
         'nav_login': 'Login',
         'nav_register': 'Register',
         'nav_logout': 'Logout',
         'nav_dashboard': 'My Dashboard',
+        'nav_profile': 'My Profile',
+        'nav_my_requests': 'My Help Requests',
         'nav_volunteer_portal': 'Volunteer Portal',
-        'nav_admin_panel': 'Admin Panel',
+        'nav_admin_panel': 'Admin Dashboard',
         'btn_start_learning': 'Start Learning',
         'btn_stay_safe': 'Stay Safe Online',
         'btn_request_help': 'Request Volunteer Help',
@@ -39,18 +45,24 @@ const CLIENT_TRANSLATIONS = {
     },
     'te': {
         'nav_home': 'హోమ్',
-        'nav_tutorials': 'స్మార్ట్‌ఫోన్ ప్రాథమికాంశాలు',
+        'nav_about': 'గురించి',
+        'nav_learn': 'నేర్చుకోండి',
+        'nav_tutorials': 'పాఠాలు',
+        'nav_smartphone_basics': 'స్మార్ట్‌ఫోన్ ప్రాథమికాంశాలు',
+        'nav_digital_safety': 'డిజిటల్ భద్రత',
         'nav_payments': 'చెల్లింపుల భద్రత',
         'nav_scams': 'మోసాలపై అవగాహన',
+        'nav_quiz': 'భద్రతా క్విజ్',
         'nav_request_help': 'సహాయం కోరండి',
-        'nav_about': 'ప్రాజెక్ట్ గురించి',
         'nav_contact': 'సంప్రదించండి',
         'nav_login': 'లాగిన్',
         'nav_register': 'నమోదు చేసుకోండి',
         'nav_logout': 'లాగ్ అవుట్',
         'nav_dashboard': 'నా డాష్‌బోర్డ్',
+        'nav_profile': 'నా ప్రొఫైల్',
+        'nav_my_requests': 'నా సహాయ అభ్యర్థనలు',
         'nav_volunteer_portal': 'వాలంటీర్ పోర్టల్',
-        'nav_admin_panel': 'అడ్మిన్ ప్యానెల్',
+        'nav_admin_panel': 'అడ్మిన్ డాష్‌బోర్డ్',
         'btn_start_learning': 'నేర్చుకోవడం ప్రారంభించండి',
         'btn_stay_safe': 'ఆన్‌లైన్‌లో సురక్షితంగా ఉండండి',
         'btn_request_help': 'వాలంటీర్ సహాయం కోరండి',
@@ -239,23 +251,46 @@ document.addEventListener('DOMContentLoaded', function () {
         navToggle.addEventListener('click', function (e) {
             e.stopPropagation();
             mainNav.classList.toggle('is-open');
-            navToggle.innerHTML = mainNav.classList.contains('is-open') ? '&times;' : '&#9776;';
-        });
-
-        document.addEventListener('click', function (e) {
-            if (!mainNav.contains(e.target) && !navToggle.contains(e.target) && mainNav.classList.contains('is-open')) {
-                mainNav.classList.remove('is-open');
-                navToggle.innerHTML = '&#9776;';
+            const isOpen = mainNav.classList.contains('is-open');
+            navToggle.innerHTML = isOpen ? '&times;' : '&#9776;';
+            if (isOpen) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
             }
         });
 
-        mainNav.querySelectorAll('.nav-link').forEach(function (link) {
-            link.addEventListener('click', function () {
+        function closeNav() {
+            if (mainNav.classList.contains('is-open')) {
                 mainNav.classList.remove('is-open');
                 navToggle.innerHTML = '&#9776;';
+                document.body.style.overflow = '';
+            }
+        }
+
+        document.addEventListener('click', function (e) {
+            if (!mainNav.contains(e.target) && !navToggle.contains(e.target)) {
+                closeNav();
+            }
+        });
+
+        mainNav.querySelectorAll('.nav-link:not(.nav-dropdown-toggle), .dropdown-item').forEach(function (link) {
+            link.addEventListener('click', function () {
+                closeNav();
             });
         });
     }
+
+    document.querySelectorAll('.nav-dropdown-toggle').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const parent = this.closest('.nav-dropdown');
+            if (parent) {
+                parent.classList.toggle('is-active');
+            }
+        });
+    });
 
     document.querySelectorAll('.lang-pill').forEach(function (pill) {
         pill.addEventListener('click', function (e) {

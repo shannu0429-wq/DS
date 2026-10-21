@@ -61,7 +61,7 @@ def seed_all():
                     'Evening 5 PM',
                     'In Progress',
                     vol_2['id'],
-                    'Scheduled a home visit with senior citizen along with student coordinator to create 1-tap contact widget.'
+                    'Scheduled a home visit with senior citizen along with volunteer to create 1-tap contact widget.'
                 ),
                 (
                     senior_2['id'],

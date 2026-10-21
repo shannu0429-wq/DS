@@ -8,9 +8,9 @@
             <h1>{{ t('nav_register') }}</h1>
             <p>
                 {% if lang == 'te' %}
-                    సీనియర్ సిటిజన్ లేదా స్వచ్ఛంద సేవకుడిగా ఉచితంగా చేరండి
+                    సీనియర్ సిటిజన్ లేదా వాలంటీర్‌గా నమోదు చేసుకోండి
                 {% else %}
-                    Join as a Senior Citizen learner or a Student Volunteer
+                    Join as a Senior Citizen learner or a Volunteer
                 {% endif %}
             </p>
         </div>
@@ -65,7 +65,7 @@
                 {% if lang == 'te' %}
                     ఇప్పటికే ఖాతా ఉందా? <a href="{{ url_for('login') }}" style="font-weight: 700;">ఇక్కడ లాగిన్ అవ్వండి</a>
                 {% else %}
-                    Already have an account? <a href="{{ url_for('login') }}" style="font-weight: 700;">Log In</a>
+                    Already have an account? <a href="{{ url_for('login') }}" style="font-weight: 700;">Login Here</a>
                 {% endif %}
             </p>
         </div>

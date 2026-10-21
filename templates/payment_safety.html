@@ -6,121 +6,114 @@
         <h1 class="section-title">{{ t('card_payment_title') }}</h1>
         <p class="section-subtitle">
             {% if lang == 'te' %}
-                ఫోన్ పే, గూగుల్ పే, పేటీఎం లేదా భీమ్ UPI ని ఎటువంటి భయం లేకుండా సురక్షితంగా ఉపయోగించే మార్గదర్శకాలు.
+                UPI, QR కోడ్స్ మరియు నెట్ బ్యాంకింగ్ సురక్షితంగా ఉపయోగించడానికి అత్యంత ముఖ్యమైన సూత్రాలు.
             {% else %}
-                Essential safety rules for PhonePe, Google Pay, Paytm, and BHIM UPI to protect your hard-earned bank balance.
+                Essential golden rules for using UPI, QR codes, and online banking safely without fear or anxiety.
             {% endif %}
         </p>
     </div>
 
-    <div style="background: linear-gradient(135deg, #B71C1C 0%, #D32F2F 100%); color: #FFFFFF; border-radius: var(--radius-lg); padding: 32px; margin-bottom: 36px; box-shadow: var(--shadow-md);">
-        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
-            <span style="font-size: 2.2rem;">&#9888;</span>
-            <h2 style="font-size: 1.8rem; font-weight: 800;">
-                {% if lang == 'te' %}
-                    అత్యంత ముఖ్యమైన గోల్డెన్ రూల్: డబ్బులు అందుకోవడానికి పిన్ అవసరం లేదు!
-                {% else %}
-                    The Absolute Golden Rule: Receiving Money NEVER Requires a UPI PIN!
-                {% endif %}
-            </h2>
+    <div style="background: linear-gradient(135deg, #BF360C 0%, #D84315 100%); color: #FFFFFF; border-radius: var(--radius-lg); padding: 36px 30px; margin-bottom: 40px; box-shadow: var(--shadow-md);">
+        <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap;">
+            <div style="font-size: 3.5rem;">&#128176;</div>
+            <div style="flex: 1; min-width: 260px;">
+                <span class="status-badge" style="background: rgba(255,255,255,0.2); color: #FFFFFF; border: 1px solid rgba(255,255,255,0.4); margin-bottom: 8px;">
+                    Golden Safety Rule
+                </span>
+                <h2 style="font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">
+                    {% if lang == 'te' %}
+                        డబ్బులు అందుకోవడానికి ఎప్పుడూ UPI పిన్ లేదా OTP అవసరం లేదు!
+                    {% else %}
+                        Receiving Money NEVER Requires Entering Your UPI PIN or OTP!
+                    {% endif %}
+                </h2>
+                <p style="font-size: 1.15rem; color: #FFCCBC; line-height: 1.6;">
+                    {% if lang == 'te' %}
+                        ఎవరైనా మీకు పెన్షన్, లాటరీ లేదా రీఫండ్ పంపుతున్నామని చెప్పి PIN నొక్కమంటే అది 100% సైబర్ మోసం. పిన్ ఎంటర్ చేస్తే మీ ఖాతా నుండి డబ్బు కట్ అవుతుంది.
+                    {% else %}
+                        If someone claims they are sending you money and tells you to scan a QR code or enter your 4/6-digit UPI PIN, it is guaranteed cyber fraud. Entering your PIN always sends money out of your account.
+                    {% endif %}
+                </p>
+            </div>
         </div>
-        <p style="font-size: 1.2rem; line-height: 1.6; color: #FFCDD2;">
-            {% if lang == 'te' %}
-                ఎవరైనా మీకు బహుమతి డబ్బులు, పెన్షన్ లేదా బకాయిలు పంపుతున్నామని చెప్పి, మీ ఫోన్‌లో UPI PIN ఎంటర్ చేయమని అడిగితే లేదా QR కోడ్ స్కాన్ చేయమంటే అది 100% మోసం! UPI PIN అనేది మీ బ్యాంక్ ఖాతా నుండి డబ్బు పంపడానికి మాత్రమే ఉపయోగించబడుతుంది.
-            {% else %}
-                If someone calls claiming they are sending you money, a lottery prize, government pension, or refund, and asks you to enter your UPI PIN or scan a QR code, IT IS A SCAM. Your UPI PIN is ONLY entered when money is leaving your account.
-            {% endif %}
-        </p>
     </div>
 
-    <div class="cards-grid" style="margin-bottom: 36px;">
-        <div class="feature-card" style="border-top: 5px solid #1565C0;">
-            <div class="feature-icon-wrapper" style="background:#E3F2FD; color:#1565C0;">&#128272;</div>
-            <h3>
-                {% if lang == 'te' %}OTP మరియు పాస్‌వర్డ్ గోప్యత{% else %}Never Share OTP or Banking Passwords{% endif %}
-            </h3>
+    <div class="cards-grid" style="margin-bottom: 40px;">
+        <div class="feature-card" style="border-left: 6px solid var(--danger);">
+            <div class="feature-icon-wrapper" style="background: #FFEBEE; color: var(--danger);">&#128274;</div>
+            <h3>{% if lang == 'te' %}UPI పిన్ రహస్యం{% else %}Keep Your UPI PIN Secret{% endif %}</h3>
             <p>
                 {% if lang == 'te' %}
-                    బ్యాంక్ మేనేజర్లు, పోలీసులు లేదా కస్టమర్ కేర్ ఎగ్జిక్యూటివ్‌లు ఎవరూ ఫోన్ చేసి ఓటీపీ లేదా పిన్ అడగరు. ఎవరైనా అడిగితే వెంటనే ఫోన్ కట్ చేయండి.
+                    మీ 4 లేదా 6 అంకెల UPI పిన్‌ను ఎవరితోనూ పంచుకోవద్దు. బ్యాంక్ అధికారులు లేదా కస్టమర్ కేర్ ప్రతినిధులు కూడా పిన్ అడగరు.
                 {% else %}
-                    Genuine bank managers and officials will never call you asking for OTPs, ATM card numbers, or CVVs. Disconnect immediately if requested.
+                    Your UPI PIN is like your ATM PIN. Never write it down or share it over phone calls, even if the caller claims to be your bank manager.
                 {% endif %}
             </p>
         </div>
 
-        <div class="feature-card" style="border-top: 5px solid #E65100;">
-            <div class="feature-icon-wrapper" style="background:#FFF3E0; color:#E65100;">&#128269;</div>
-            <h3>
-                {% if lang == 'te' %}చెల్లించే ముందు పేరు తనిఖీ చేయండి{% else %}Always Verify Recipient Name{% endif %}
-            </h3>
+        <div class="feature-card" style="border-left: 6px solid var(--danger);">
+            <div class="feature-icon-wrapper" style="background: #FFEBEE; color: var(--danger);">&#128242;</div>
+            <h3>{% if lang == 'te' %}OTP ఎవరికీ చెప్పవద్దు{% else %}Never Share OTP with Anyone{% endif %}</h3>
             <p>
                 {% if lang == 'te' %}
-                    ఎవరికైనా చెల్లింపు చేసేటప్పుడు, స్క్రీన్‌పై వారి అధికారిక పేరు కనిపిస్తుంది. సరైన వ్యక్తేనా అని ఒకటికి రెండుసార్లు చూసుకుని మాత్రమే పిన్ నొక్కండి.
+                    OTP (వన్ టైమ్ పాస్‌వర్డ్) అనేది మీ బ్యాంక్ లాకర్ తాళం లాంటిది. 'KYC అప్‌డేట్' లేదా 'బిల్లు చెల్లింపు' పేరుతో వచ్చే ఫోన్ కాల్స్‌లో OTP చెప్పకండి.
                 {% else %}
-                    Before entering your PIN to pay, verify the verified name shown on the UPI screen. Never send money to unverified personal numbers.
+                    One-Time Passwords (OTP) authorize transactions. Real bank employees will never ask you for an OTP. Never read out OTPs to any caller.
                 {% endif %}
             </p>
         </div>
 
-        <div class="feature-card" style="border-top: 5px solid #2E7D32;">
-            <div class="feature-icon-wrapper" style="background:#E8F5E9; color:#2E7D32;">&#128176;</div>
-            <h3>
-                {% if lang == 'te' %}పరిమిత లావాదేవీల పరిమితి{% else %}Keep Modest Daily Limits{% endif %}
-            </h3>
+        <div class="feature-card" style="border-left: 6px solid #F57F17;">
+            <div class="feature-icon-wrapper" style="background: #FFFDE7; color: #F57F17;">&#128247;</div>
+            <h3>{% if lang == 'te' %}QR కోడ్ స్కాన్ భద్రత{% else %}QR Code Scam Awareness{% endif %}</h3>
             <p>
                 {% if lang == 'te' %}
-                    మీ రోజువారీ UPI లావాదేవీల పరిమితిని రూ. 5,000 లేదా 10,000 కు సెట్ చేసుకోవడం మంచిది. దీనివల్ల పొరపాటు జరిగినా పెద్ద నష్టం జరగదు.
+                    షాపుల్లో వస్తువులు కొని బిల్లు చెల్లించడానికి మాత్రమే QR కోడ్ స్కాన్ చేయాలి. డబ్బులు స్వీకరించడానికి QR కోడ్ స్కాన్ చేయవద్దు.
                 {% else %}
-                    Set a reasonable daily UPI limit (e.g., Rs. 5,000 to 10,000) inside your banking app so your lifetime savings remain safe in the main account.
+                    QR codes are only meant to pay out money at merchant counters. Scanning a QR code sent over WhatsApp will debit your account, never credit it.
                 {% endif %}
             </p>
         </div>
 
-        <div class="feature-card" style="border-top: 5px solid #C62828;">
-            <div class="feature-icon-wrapper" style="background:#FFEBEE; color:#C62828;">&#128680;</div>
-            <h3>
-                {% if lang == 'te' %}నకిలీ స్క్రీన్‌షాట్ మోసాలు{% else %}Fake Payment Screenshot Scams{% endif %}
-            </h3>
+        <div class="feature-card" style="border-left: 6px solid #2E7D32;">
+            <div class="feature-icon-wrapper" style="background: #E8F5E9; color: #2E7D32;">&#128276;</div>
+            <h3>{% if lang == 'te' %}SMS అలర్ట్స్ పరిశీలన{% else %}Always Read Bank SMS Alerts{% endif %}</h3>
             <p>
                 {% if lang == 'te' %}
-                    కొందరు నకిలీ చెల్లింపు రశీదులను చూపిస్తూ డబ్బులు పంపామని నమ్మిస్తారు. మీ బ్యాంక్ నుండి ఎస్సెమ్మెస్ వచ్చిందో లేదో మీరే స్వయంగా బ్యాలెన్స్ చూసుకోండి.
+                    ప్రతి లావాదేవీ తర్వాత బ్యాంక్ నుండి వచ్చే SMS ను శ్రద్ధగా చదవండి. 'Debited' అంటే డబ్బు తగ్గింది, 'Credited' అంటే డబ్బు చేరింది.
                 {% else %}
-                    Scammers often display doctored green screenshots claiming payment was made. Always independently check your actual bank SMS and account balance.
+                    After every payment, check your SMS. If you see the word 'Debited', money was deducted. If you see an unexpected debit, contact your bank immediately.
                 {% endif %}
             </p>
         </div>
     </div>
 
-    <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 36px; box-shadow: var(--shadow-sm); margin-bottom: 36px;">
+    <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 36px; box-shadow: var(--shadow-sm); margin-bottom: 40px;">
         <h2 style="font-size: 1.6rem; color: var(--primary-dark); margin-bottom: 20px;">
-            {% if lang == 'te' %}
-                మోసం జరిగినట్లు అనుమానం వస్తే వెంటనే చేయవలసిన 4 పనులు:
-            {% else %}
-                4 Immediate Steps If You Suspect Financial Fraud:
-            {% endif %}
+            {% if lang == 'te' %}ఒకవేళ మోసం జరిగితే ఏమి చేయాలి?{% else %}What to Do If Cyber Fraud Happens{% endif %}
         </h2>
 
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
+        <div class="cards-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
             <div style="background: var(--bg-main); padding: 20px; border-radius: var(--radius-md); border-left: 4px solid var(--danger);">
                 <div style="font-size: 1.5rem; font-weight: 800; color: var(--danger); margin-bottom: 6px;">1</div>
-                <h4 style="margin-bottom: 8px;">{% if lang == 'te' %}వెంటనే 1930 కి కాల్ చేయండి{% else %}Dial 1930 Immediately{% endif %}</h4>
+                <h4 style="margin-bottom: 8px;">{% if lang == 'te' %}1930 కి వెంటనే కాల్ చేయండి{% else %}Dial 1930 Immediately{% endif %}</h4>
                 <p style="font-size: 0.95rem; color: var(--text-muted);">
                     {% if lang == 'te' %}
-                        కేంద్ర ప్రభుత్వ జాతీయ సైబర్ క్రైమ్ హెల్ప్‌లైన్ నంబర్ 1930 కి కాల్ చేసి మోసం జరిగిన 2 గంటల్లోపు ఫిర్యాదు చేస్తే మీ డబ్బు రికవరీ అయ్యే అవకాశం ఉంది.
+                        మొదటి 2-3 గంటలలో (గోల్డెన్ అవర్) 1930 జాతీయ సైబర్ హెల్ప్‌లైన్‌కు ఫిర్యాదు చేస్తే బ్యాంక్ ఆ డబ్బును నిలిపివేస్తుంది.
                     {% else %}
-                        Call National Cyber Crime Helpline 1930 within the golden hour to freeze fraudulent bank transfers before cash-out.
+                        Reporting to the 1930 National Cyber Helpline within the golden hour enables authorities to freeze the stolen funds immediately.
                     {% endif %}
                 </p>
             </div>
 
-            <div style="background: var(--bg-main); padding: 20px; border-radius: var(--radius-md); border-left: 4px solid var(--accent);">
-                <div style="font-size: 1.5rem; font-weight: 800; color: var(--accent); margin-bottom: 6px;">2</div>
-                <h4 style="margin-bottom: 8px;">{% if lang == 'te' %}బ్యాంక్ ఖాతాను బ్లాక్ చేయండి{% else %}Block Bank & Cards{% endif %}</h4>
+            <div style="background: var(--bg-main); padding: 20px; border-radius: var(--radius-md); border-left: 4px solid #E65100;">
+                <div style="font-size: 1.5rem; font-weight: 800; color: #E65100; margin-bottom: 6px;">2</div>
+                <h4 style="margin-bottom: 8px;">{% if lang == 'te' %}బ్యాంక్ ఖాతా లేదా కార్డు బ్లాక్ చేయండి{% else %}Block Your Card / Account{% endif %}</h4>
                 <p style="font-size: 0.95rem; color: var(--text-muted);">
                     {% if lang == 'te' %}
-                        మీ బ్యాంక్ హెల్ప్‌లైన్‌కు కాల్ చేసి తాత్కాలికంగా మీ UPI సేవలను మరియు డెబిట్ కార్డును బ్లాక్ చేయమని కోరండి.
+                        మీ బ్యాంక్ టోల్-ఫ్రీ నంబర్‌కు కాల్ చేసి మీ ATM కార్డు మరియు నెట్ బ్యాంకింగ్‌ను తాత్కాలికంగా బ్లాక్ చేయమని కోరండి.
                     {% else %}
-                        Contact your bank's official toll-free helpline to freeze net banking and block all connected debit cards.
+                        Call your bank's 24x7 customer support toll-free line to immediately block your debit card and suspend internet banking access.
                     {% endif %}
                 </p>
             </div>
@@ -144,7 +137,7 @@
                     {% if lang == 'te' %}
                         మా డిజిటల్ సాథీ వాలంటీర్లకు రిక్వెస్ట్ పంపండి. వారు మీకు అవసరమైన తోడ్పాటును అందిస్తారు.
                     {% else %}
-                        Submit a help request to our student volunteer team for patient, step-by-step assistance with banking recovery forms.
+                        Submit a help request to our volunteer team for patient, step-by-step assistance with banking recovery forms.
                     {% endif %}
                 </p>
             </div>
@@ -152,7 +145,7 @@
     </div>
 
     <div style="text-align: center; margin-top: 30px;">
-        <a href="{{ url_for('scam_awareness') }}" class="btn btn-primary btn-lg">{{ t('btn_take_quiz') }} &rarr;</a>
+        <a href="{{ url_for('quiz_page') }}" class="btn btn-primary btn-lg">{{ t('btn_take_quiz') }} &rarr;</a>
         <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-lg">{{ t('btn_request_help') }}</a>
     </div>
 </div>

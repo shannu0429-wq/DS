@@ -6,9 +6,9 @@
         <h1 class="section-title">{{ t('nav_contact') }}</h1>
         <p class="section-subtitle">
             {% if lang == 'te' %}
-                ఏదైనా అత్యవసర సైబర్ మోసం లేదా వాలంటీర్ సహాయం కోసం మమ్మల్ని సంప్రదించండి.
+                మీ ప్రశ్నలు, సలహాలు లేదా సహాయం కోసం మమ్మల్ని సంప్రదించండి లేదా అధికారిక హెల్ప్‌లైన్లను ఉపయోగించండి.
             {% else %}
-                Reach out to our student volunteer team or access official government emergency assistance resources.
+                Send us a message with any inquiry or access official national emergency assistance resources.
             {% endif %}
         </p>
     </div>
@@ -16,55 +16,86 @@
     <div class="dashboard-grid" style="margin-bottom: 40px;">
         <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 36px; box-shadow: var(--shadow-sm);">
             <h2 style="font-size: 1.6rem; color: var(--primary-dark); margin-bottom: 20px;">
-                {% if lang == 'te' %}కమ్యూనిటీ సర్వీస్ ప్రాజెక్ట్ బృందం{% else %}Community Service Project Team{% endif %}
+                {% if lang == 'te' %}సందేశం పంపండి{% else %}Send a Message{% endif %}
             </h2>
 
-            <div style="margin-bottom: 24px; font-size: 1.1rem; line-height: 1.8;">
-                <strong>Project:</strong> DigitalSaathi (Digital Literacy & Online Safety for Seniors)<br>
-                <strong>Department:</strong> Computer Science and Engineering<br>
-                <strong>Institution:</strong> Vasireddy Venkatadri Institute of Technology (VVIT)<br>
-                <strong>Address:</strong> Nambur, Peda Kakani Mandal, Guntur District, Andhra Pradesh - 522508<br>
-                <strong>Email:</strong> <a href="mailto:support@digitalsaathi.org">support@digitalsaathi.org</a>
-            </div>
+            <form method="POST" action="{{ url_for('contact') }}">
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="contact_name" class="form-label">{{ t('form_full_name') }} *</label>
+                    <input type="text" id="contact_name" name="name" class="form-control" placeholder="Your Name" value="{{ current_user.name if is_auth else '' }}" required>
+                </div>
 
-            <div style="background: var(--bg-main); padding: 20px; border-radius: var(--radius-md); border-left: 4px solid var(--primary); margin-bottom: 24px;">
-                <h4 style="margin-bottom: 8px; color: var(--primary);">Need Personal Volunteer Help?</h4>
-                <p style="font-size: 1rem; color: var(--text-muted); margin-bottom: 14px;">
-                    {% if lang == 'te' %}
-                        మీరు ఒక సీనియర్ సిటిజన్ అయితే, దయచేసి మా పోర్టల్‌లో అభ్యర్థనను సమర్పించండి. మా వాలంటీర్లు మీకు నేరుగా కాల్ చేస్తారు.
-                    {% else %}
-                        If you are an elderly citizen needing technical assistance with your phone or online services, submit a help request directly:
-                    {% endif %}
-                </p>
-                <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-sm">&#129309; {{ t('btn_request_help') }}</a>
-            </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="contact_email" class="form-label">{{ t('form_email') }} *</label>
+                    <input type="email" id="contact_email" name="email" class="form-control" placeholder="name@example.com" value="{{ current_user.email if is_auth else '' }}" required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="contact_phone" class="form-label">{{ t('form_mobile') }}</label>
+                    <input type="tel" id="contact_phone" name="phone" class="form-control" placeholder="10-digit mobile number">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label for="contact_subject" class="form-label">{{ t('form_subject') }} *</label>
+                    <input type="text" id="contact_subject" name="subject" class="form-control" placeholder="Subject" required>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label for="contact_message" class="form-label">{{ t('form_description') }} *</label>
+                    <textarea id="contact_message" name="message" class="form-control" style="min-height: 120px;" placeholder="How can we assist you?" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">{{ t('btn_submit') }}</button>
+            </form>
         </div>
 
-        <div style="background: #FFF8E1; border: 2px solid #FFE082; border-radius: var(--radius-lg); padding: 36px; box-shadow: var(--shadow-sm);">
-            <h2 style="font-size: 1.5rem; color: #E65100; margin-bottom: 20px;">
-                &#9888; Official National Helplines
-            </h2>
+        <div style="display: flex; flex-direction: column; gap: 24px;">
+            <div style="background: #FFF8E1; border: 2px solid #FFE082; border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-sm);">
+                <h2 style="font-size: 1.4rem; color: #E65100; margin-bottom: 16px;">
+                    &#9888; Official National Helplines
+                </h2>
 
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                <div style="background: #FFFFFF; padding: 18px; border-radius: var(--radius-md); border-left: 5px solid #C62828;">
-                    <div style="font-size: 0.85rem; font-weight: 700; color: #C62828; text-transform: uppercase;">Immediate Cyber Fraud</div>
-                    <div style="font-size: 1.8rem; font-weight: 800; color: #B71C1C;">1930</div>
-                    <div style="font-size: 0.95rem; color: var(--text-muted);">National Cyber Crime Helpline (24x7 Toll-Free)</div>
-                </div>
-
-                <div style="background: #FFFFFF; padding: 18px; border-radius: var(--radius-md); border-left: 5px solid #1565C0;">
-                    <div style="font-size: 0.85rem; font-weight: 700; color: #1565C0; text-transform: uppercase;">Online Complaint Portal</div>
-                    <div style="font-size: 1.25rem; font-weight: 800; color: #0D47A1;">
-                        <a href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a>
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+                    <div style="background: #FFFFFF; padding: 16px; border-radius: var(--radius-md); border-left: 5px solid #C62828;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: #C62828; text-transform: uppercase;">Cyber Financial Fraud (24x7)</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: #B71C1C;">1930</div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted);">National Cyber Crime Reporting Helpline</div>
                     </div>
-                    <div style="font-size: 0.95rem; color: var(--text-muted);">Ministry of Home Affairs, Govt. of India</div>
-                </div>
 
-                <div style="background: #FFFFFF; padding: 18px; border-radius: var(--radius-md); border-left: 5px solid #2E7D32;">
-                    <div style="font-size: 0.85rem; font-weight: 700; color: #2E7D32; text-transform: uppercase;">Elder Line Helpline</div>
-                    <div style="font-size: 1.8rem; font-weight: 800; color: #1B5E20;">14567</div>
-                    <div style="font-size: 0.95rem; color: var(--text-muted);">Ministry of Social Justice & Empowerment</div>
+                    <div style="background: #FFFFFF; padding: 16px; border-radius: var(--radius-md); border-left: 5px solid #1565C0;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: #1565C0; text-transform: uppercase;">Online Complaint Portal</div>
+                        <div style="font-size: 1.15rem; font-weight: 800; color: #0D47A1; margin-top: 4px;">
+                            <a href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a>
+                        </div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted);">Ministry of Home Affairs, Government of India</div>
+                    </div>
+
+                    <div style="background: #FFFFFF; padding: 16px; border-radius: var(--radius-md); border-left: 5px solid #2E7D32;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: #2E7D32; text-transform: uppercase;">Elder Line Toll-Free</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: #1B5E20;">14567</div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted);">National Helpline for Senior Citizens</div>
+                    </div>
+
+                    <div style="background: #FFFFFF; padding: 16px; border-radius: var(--radius-md); border-left: 5px solid #6A1B9A;">
+                        <div style="font-size: 0.8rem; font-weight: 700; color: #6A1B9A; text-transform: uppercase;">Emergency Response Support</div>
+                        <div style="font-size: 1.8rem; font-weight: 800; color: #4A148C;">112</div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted);">All-India Unified Emergency Service</div>
+                    </div>
                 </div>
+            </div>
+
+            <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm);">
+                <h3 style="font-size: 1.2rem; color: var(--primary-dark); margin-bottom: 10px;">
+                    {% if lang == 'te' %}వ్యక్తిగత సహాయం కావాలా?{% else %}Need Personal Assistance?{% endif %}
+                </h3>
+                <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 14px;">
+                    {% if lang == 'te' %}
+                        మా వాలంటీర్ నుండి ఒకరితో ఒకరు నేర్చుకోవడానికి లేదా సాంకేతిక సమస్యను పరిష్కరించడానికి సహాయ అభ్యర్థనను సమర్పించండి.
+                    {% else %}
+                        Submit a direct help request to get one-on-one assistance from our dedicated volunteers.
+                    {% endif %}
+                </p>
+                <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-sm" style="width: 100%;">{{ t('btn_request_help') }}</a>
             </div>
         </div>
     </div>

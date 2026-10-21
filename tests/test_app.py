@@ -25,6 +25,9 @@ class DigitalSaathiTestCase(unittest.TestCase):
         response = self.client.get('/')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'DigitalSaathi', response.data)
+        self.assertNotIn(b'activity1.jpeg', response.data)
+        self.assertNotIn(b'Community Service Project Impact', response.data)
+        self.assertNotIn(b'Senior Citizens Enrolled', response.data)
 
     def test_language_toggle(self):
         res_te = self.client.get('/set-language/te', follow_redirects=True)
@@ -52,6 +55,11 @@ class DigitalSaathiTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('ఆన్ చేయడం'.encode('utf-8'), response.data)
 
+    def test_smartphone_basics_page(self):
+        response = self.client.get('/smartphone-basics')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Calling', response.data)
+
     def test_payment_safety_page(self):
         response = self.client.get('/payment-safety')
         self.assertEqual(response.status_code, 200)
@@ -61,6 +69,11 @@ class DigitalSaathiTestCase(unittest.TestCase):
         response = self.client.get('/scam-awareness')
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Scam', response.data)
+
+    def test_quiz_page(self):
+        response = self.client.get('/quiz')
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Quiz', response.data)
 
     def test_quiz_submission(self):
         payload = {
@@ -104,6 +117,26 @@ class DigitalSaathiTestCase(unittest.TestCase):
         }, follow_redirects=True)
         self.assertIn(b'Invalid email address or password', response.data)
 
+    def test_forgot_password_page_and_reset(self):
+        get_res = self.client.get('/forgot-password')
+        self.assertEqual(get_res.status_code, 200)
+
+        post_res = self.client.post('/forgot-password', data={
+            'email': 'ramarao@example.com',
+            'mobile_number': '9848012345',
+            'new_password': 'Senior@123New',
+            'confirm_password': 'Senior@123New'
+        }, follow_redirects=True)
+        self.assertEqual(post_res.status_code, 200)
+
+        reset_back_res = self.client.post('/forgot-password', data={
+            'email': 'ramarao@example.com',
+            'mobile_number': '9848012345',
+            'new_password': 'Senior@123',
+            'confirm_password': 'Senior@123'
+        }, follow_redirects=True)
+        self.assertEqual(reset_back_res.status_code, 200)
+
     def test_senior_login_and_dashboard(self):
         response = self.client.post('/login', data={
             'email': 'ramarao@example.com',
@@ -114,6 +147,9 @@ class DigitalSaathiTestCase(unittest.TestCase):
 
         dash_res = self.client.get('/dashboard')
         self.assertEqual(dash_res.status_code, 200)
+
+        prof_res = self.client.get('/profile')
+        self.assertEqual(prof_res.status_code, 200)
 
         logout_res = self.client.get('/logout', follow_redirects=True)
         self.assertIn(b'logged out', logout_res.data)
@@ -137,6 +173,12 @@ class DigitalSaathiTestCase(unittest.TestCase):
         admin_res = self.client.get('/admin/dashboard')
         self.assertEqual(admin_res.status_code, 200)
         self.assertIn(b'Administration', admin_res.data)
+
+        req_res = self.client.get('/admin/requests')
+        self.assertEqual(req_res.status_code, 200)
+
+        cat_res = self.client.get('/admin/categories')
+        self.assertEqual(cat_res.status_code, 200)
         self.client.get('/logout')
 
     def test_volunteer_dashboard_access(self):
@@ -172,7 +214,8 @@ class DigitalSaathiTestCase(unittest.TestCase):
     def test_about_and_contact_pages(self):
         res_about = self.client.get('/about')
         self.assertEqual(res_about.status_code, 200)
-        self.assertIn(b'Vasireddy Venkatadri', res_about.data)
+        self.assertIn(b'DigitalSaathi', res_about.data)
+        self.assertNotIn(b'activity1.jpeg', res_about.data)
 
         res_contact = self.client.get('/contact')
         self.assertEqual(res_contact.status_code, 200)

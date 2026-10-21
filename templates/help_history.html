@@ -2,48 +2,42 @@
 
 {% block content %}
 <div class="content-container">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 30px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 32px;">
         <div>
-            <h1 style="font-size: 2rem; color: var(--primary-dark); margin-bottom: 6px;">
-                {% if lang == 'te' %}నా సహాయ అభ్యర్థనల చరిత్ర{% else %}My Help Requests History{% endif %}
-            </h1>
-            <p style="color: var(--text-muted); font-size: 1.1rem;">
-                {% if lang == 'te' %}మీరు సమర్పించిన అభ్యర్థనలు మరియు వాటి ప్రస్తుత స్థితిని ఇక్కడ పరిశీలించండి.{% else %}Track the status and resolution of your submitted assistance requests.{% endif %}
+            <h1 class="section-title">{{ t('nav_my_requests') }}</h1>
+            <p class="section-subtitle" style="margin-bottom: 0;">
+                {% if lang == 'te' %}మీరు సమర్పించిన సహాయ అభ్యర్థనలు మరియు వాటి పరిష్కార స్థితి.{% else %}Track the status and resolution of your submitted help requests.{% endif %}
             </p>
         </div>
         <div>
-            <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-lg">&#129309; {{ t('btn_request_help') }}</a>
+            <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-sm">&#129309; {{ t('btn_request_help') }}</a>
         </div>
     </div>
 
     {% if requests %}
-        <div class="table-responsive">
+        <div class="table-responsive" style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm);">
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>{% if lang == 'te' %}తేదీ{% else %}Date Submitted{% endif %}</th>
+                        <th>{% if lang == 'te' %}తేదీ{% else %}Date{% endif %}</th>
                         <th>{{ t('form_subject') }}</th>
                         <th>{{ t('form_contact_method') }}</th>
-                        <th>{% if lang == 'te' %}పరిస్థితి{% else %}Current Status{% endif %}</th>
-                        <th>{% if lang == 'te' %}కేటాయించిన వాలంటీర్{% else %}Assigned Volunteer{% endif %}</th>
-                        <th>{{ t('form_resolution_notes') }}</th>
+                        <th>{% if lang == 'te' %}పరిస్థితి{% else %}Status{% endif %}</th>
+                        <th>{% if lang == 'te' %}వాలంటీర్{% else %}Assigned Volunteer{% endif %}</th>
+                        <th>{% if lang == 'te' %}పరిష్కార వివరాలు{% else %}Resolution Summary{% endif %}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for req in requests %}
                         <tr>
-                            <td>#{{ req.id }}</td>
-                            <td>{{ req.created_at.strftime('%d-%b-%Y %I:%M %p') if req.created_at else '' }}</td>
+                            <td>{{ req.created_at.strftime('%d-%b-%Y') if req.created_at else '' }}</td>
                             <td>
                                 <strong>{{ req.subject }}</strong>
-                                <div style="font-size: 0.95rem; color: var(--text-muted); margin-top: 4px;">{{ req.description }}</div>
+                                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px;">{{ req.description }}</p>
                             </td>
                             <td>
-                                <div>{{ req.preferred_contact_method }}</div>
-                                {% if req.preferred_contact_time %}
-                                    <div style="font-size: 0.85rem; color: var(--text-muted);">{{ req.preferred_contact_time }}</div>
-                                {% endif %}
+                                {{ req.preferred_contact_method }}<br>
+                                <span style="font-size: 0.85rem; color: var(--text-muted);">{{ req.preferred_contact_time or '' }}</span>
                             </td>
                             <td>
                                 {% if req.status == 'Pending' %}
@@ -60,23 +54,21 @@
                             </td>
                             <td>
                                 {% if req.volunteer_name %}
-                                    <div style="font-weight: 700; color: var(--primary);">{{ req.volunteer_name }}</div>
-                                    <div style="font-size: 0.9rem; color: var(--text-muted);">&#128222; {{ req.volunteer_mobile }}</div>
+                                    <strong>{{ req.volunteer_name }}</strong><br>
+                                    <a href="tel:{{ req.volunteer_mobile }}" style="font-size: 0.9rem;">{{ req.volunteer_mobile }}</a>
                                 {% else %}
                                     <span style="color: var(--text-muted); font-style: italic;">
-                                        {% if lang == 'te' %}కేటాయింపు ప్రక్రియలో ఉంది{% else %}Awaiting Volunteer{% endif %}
+                                        {% if lang == 'te' %}కేటాయింపు పెండింగ్‌లో ఉంది{% else %}Awaiting Assignment{% endif %}
                                     </span>
                                 {% endif %}
                             </td>
                             <td>
                                 {% if req.resolution_summary %}
-                                    <div style="background: var(--success-light); padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid #C8E6C9; font-size: 0.95rem; color: #1B5E20;">
+                                    <div style="background: var(--success-light); padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.95rem; color: #1B5E20;">
                                         {{ req.resolution_summary }}
                                     </div>
                                 {% else %}
-                                    <span style="color: var(--text-muted); font-style: italic;">
-                                        {% if lang == 'te' %}పరిష్కారం వేచి ఉంది{% else %}In progress{% endif %}
-                                    </span>
+                                    <span style="color: var(--text-muted); font-size: 0.9rem;">-</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -91,7 +83,7 @@
                 {% if lang == 'te' %}ఎటువంటి అభ్యర్థనలు లేవు{% else %}No Requests Found{% endif %}
             </h3>
             <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 24px;">
-                {% if lang == 'te' %}మీకు స్మార్ట్‌ఫోన్ లేదా ఆన్‌లైన్ సేవలలో ఏదైనా సందేహం ఉంటే సంకోచించకుండా అడగండి.{% else %}Whenever you encounter technical difficulty, our student volunteers are ready to help.{% endif %}
+                {% if lang == 'te' %}మీకు స్మార్ట్‌ఫోన్ లేదా ఆన్‌లైన్ సేవలలో ఏదైనా సందేహం ఉంటే సంకోచించకుండా అడగండి.{% else %}Whenever you encounter technical difficulty, our volunteers are ready to help.{% endif %}
             </p>
             <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-lg">&#129309; {{ t('btn_request_help') }}</a>
         </div>

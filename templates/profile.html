@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div class="form-card" style="max-width: 680px;">
+        <div class="form-header">
+            <span class="status-badge badge-assigned" style="font-size: 0.95rem; margin-bottom: 8px;">
+                {% if lang == 'te' %}ఖాతా సెట్టింగ్స్{% else %}Account Settings{% endif %}
+            </span>
+            <h1>{{ t('nav_profile') }}</h1>
+            <p>
+                {% if lang == 'te' %}
+                    మీ వ్యక్తిగత వివరాలు మరియు భాషా ప్రాధాన్యతను నిర్వహించండి
+                {% else %}
+                    Manage your personal details, preferred language, and account security
+                {% endif %}
+            </p>
+        </div>
+
+        <form method="POST" action="{{ url_for('profile') }}">
+            <div class="form-group">
+                <label for="profile_name" class="form-label">{{ t('form_full_name') }} *</label>
+                <input type="text" id="profile_name" name="full_name" class="form-control" value="{{ user.full_name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="profile_email" class="form-label">{{ t('form_email') }}</label>
+                <input type="email" id="profile_email" class="form-control" value="{{ user.email }}" readonly style="background-color: #F1F5F9; cursor: not-allowed;">
+            </div>
+
+            <div class="form-group">
+                <label for="profile_mobile" class="form-label">{{ t('form_mobile') }} *</label>
+                <input type="tel" id="profile_mobile" name="mobile_number" class="form-control" value="{{ user.mobile_number }}" pattern="[0-9]{10}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="profile_lang" class="form-label">{{ t('form_preferred_lang') }}</label>
+                <select id="profile_lang" name="preferred_language" class="form-control">
+                    <option value="en" {% if user.preferred_language == 'en' %}selected{% endif %}>English</option>
+                    <option value="te" {% if user.preferred_language == 'te' %}selected{% endif %}>తెలుగు (Telugu)</option>
+                </select>
+            </div>
+
+            <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                <h3 style="font-size: 1.15rem; color: var(--primary-dark); margin-bottom: 12px;">
+                    {% if lang == 'te' %}పాస్‌వర్డ్ మార్చండి (ఐచ్ఛికం){% else %}Change Password (Optional){% endif %}
+                </h3>
+
+                <div class="form-group">
+                    <label for="current_password" class="form-label">
+                        {% if lang == 'te' %}ప్రస్తుత పాస్‌వర్డ్{% else %}Current Password{% endif %}
+                    </label>
+                    <input type="password" id="current_password" name="current_password" class="form-control" placeholder="Enter current password to change">
+                </div>
+
+                <div class="form-group">
+                    <label for="new_password" class="form-label">
+                        {% if lang == 'te' %}కొత్త పాస్‌వర్డ్{% else %}New Password{% endif %}
+                    </label>
+                    <input type="password" id="new_password" name="new_password" class="form-control" minlength="6" placeholder="Leave blank to keep current">
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password" class="form-label">{{ t('form_confirm_password') }}</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" minlength="6" placeholder="Confirm new password">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">{{ t('btn_save') }}</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

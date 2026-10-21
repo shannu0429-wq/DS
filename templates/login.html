@@ -22,7 +22,10 @@
             </div>
 
             <div class="form-group">
-                <label for="password" class="form-label">{{ t('form_password') }}</label>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <label for="password" class="form-label" style="margin-bottom: 0;">{{ t('form_password') }}</label>
+                    <a href="{{ url_for('forgot_password') }}" style="font-size: 0.9rem; font-weight: 600;">{{ t('btn_forgot_password') }}</a>
+                </div>
                 <input type="password" id="password" name="password" class="form-control" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required autocomplete="current-password">
             </div>
 

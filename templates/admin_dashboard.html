@@ -10,15 +10,21 @@
                 </span>
                 <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 8px;">DigitalSaathi Administration</h1>
                 <p style="font-size: 1.15rem; color: #E1BEE7;">
-                    Overview of community platform metrics, volunteer assignments, user accounts, and learning content.
+                    Overview of platform metrics, volunteer assignments, user accounts, and learning content.
                 </p>
             </div>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
                 <a href="{{ url_for('manage_users') }}" class="btn btn-outline" style="border-color:#FFFFFF; color:#FFFFFF !important;">
-                    &#128101; Manage Users
+                    &#128101; {{ t('nav_manage_users') }}
                 </a>
-                <a href="{{ url_for('manage_tutorials') }}" class="btn btn-accent">
-                    &#128214; Manage Tutorials
+                <a href="{{ url_for('manage_tutorials') }}" class="btn btn-outline" style="border-color:#FFFFFF; color:#FFFFFF !important;">
+                    &#128214; {{ t('nav_manage_tutorials') }}
+                </a>
+                <a href="{{ url_for('admin_requests') }}" class="btn btn-accent">
+                    &#129309; {{ t('nav_manage_requests') }}
+                </a>
+                <a href="{{ url_for('manage_categories') }}" class="btn btn-outline" style="border-color:#FFFFFF; color:#FFFFFF !important;">
+                    &#128193; {{ t('nav_manage_categories') }}
                 </a>
             </div>
         </div>
@@ -35,7 +41,7 @@
         </div>
         <div class="feature-card" style="text-align: center; border-top: 5px solid #2E7D32;">
             <div style="font-size: 2.5rem; font-weight: 800; color: #2E7D32;">{{ total_volunteers }}</div>
-            <div style="font-weight: 700; color: var(--text-muted);">Student Volunteers</div>
+            <div style="font-weight: 700; color: var(--text-muted);">Volunteers</div>
         </div>
         <div class="feature-card" style="text-align: center; border-top: 5px solid #F57F17;">
             <div style="font-size: 2.5rem; font-weight: 800; color: #F57F17;">{{ total_requests }}</div>
@@ -52,9 +58,14 @@
     </div>
 
     <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-sm);">
-        <h2 style="font-size: 1.6rem; color: var(--primary-dark); margin-bottom: 20px;">
-            Recent Assistance Requests & Volunteer Assignments
-        </h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+            <h2 style="font-size: 1.6rem; color: var(--primary-dark); margin: 0;">
+                Recent Assistance Requests & Volunteer Assignments
+            </h2>
+            <a href="{{ url_for('admin_requests') }}" class="btn btn-outline btn-sm">
+                View All Requests &rarr;
+            </a>
+        </div>
 
         {% if recent_requests %}
             <div class="table-responsive">

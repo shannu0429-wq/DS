@@ -6,9 +6,9 @@
         <h1 class="section-title">{{ t('nav_about') }}</h1>
         <p class="section-subtitle">
             {% if lang == 'te' %}
-                వృద్ధులలో డిజిటల్ అక్షరాస్యత మరియు సైబర్ భద్రతను పెంపొందించడానికి కమ్యూనిటీ సర్వీస్ ప్రాజెక్ట్.
+                సీనియర్ పౌరులలో డిజిటల్ అక్షరాస్యత మరియు ఆన్‌లైన్ భద్రతను పెంపొందించడానికి అంకితమైన వేదిక.
             {% else %}
-                A Dedicated Community Service Project (CSP) Empowering Senior Citizens in Digital Literacy and Cyber Safety.
+                Dedicated to empowering senior citizens with digital literacy, smartphone confidence, and online safety skills.
             {% endif %}
         </p>
     </div>
@@ -16,92 +16,78 @@
     <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 40px; box-shadow: var(--shadow-sm); margin-bottom: 40px;">
         <div class="two-col-grid" style="align-items: center; margin-bottom: 40px;">
             <div>
-                <span class="status-badge badge-assigned" style="margin-bottom: 12px;">Community Service Initiative</span>
+                <span class="status-badge badge-assigned" style="margin-bottom: 12px;">{% if lang == 'te' %}డిజిటల్ సాధికారత{% else %}Digital Empowerment{% endif %}</span>
                 <h2 style="font-size: 1.8rem; color: var(--primary-dark); margin-bottom: 16px;">
-                    {% if lang == 'te' %}మా లక్ష్యం మరియు దృక్పథం{% else %}Our Objective & Community Mission{% endif %}
+                    {% if lang == 'te' %}మా లక్ష్యం మరియు దృక్పథం{% else %}Our Mission & Vision{% endif %}
                 </h2>
                 <p style="font-size: 1.1rem; line-height: 1.7; color: var(--text-main); margin-bottom: 16px;">
                     {% if lang == 'te' %}
                         భారతదేశంలో వేగంగా విస్తరిస్తున్న డిజిటల్ సేవలు (UPI, వాట్సాప్, ప్రభుత్వ పోర్టల్స్) మరియు స్మార్ట్‌ఫోన్ సాంకేతికతను సీనియర్ సిటిజన్లు స్వతంత్రంగా, భయం లేకుండా ఉపయోగించేలా శిక్షణ ఇవ్వడం డిజిటల్ సాథీ ప్రధాన ఉద్దేశం.
                     {% else %}
-                        The primary objective of DigitalSaathi is to bridge the digital divide for elderly citizens. With rapid digitalization across banking, utility payments, and communication, senior citizens often face anxiety and vulnerability to cybercrime. We provide patient, accessible education and personal volunteer mentorship.
+                        The primary mission of DigitalSaathi is to bridge the digital divide for elderly citizens. With rapid digitalization across banking, utility payments, and family communication, seniors often face anxiety and vulnerability to cybercrime. We provide patient, accessible education, safety tutorials, and personal volunteer support.
                     {% endif %}
                 </p>
             </div>
-            <div>
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="DigitalSaathi Logo" style="border-radius: var(--radius-md); max-height: 300px; margin: 0 auto;">
+            <div style="text-align: center;">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="DigitalSaathi Logo" style="border-radius: var(--radius-md); max-height: 240px; margin: 0 auto;">
             </div>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-bottom: 40px;">
             <div style="background: var(--bg-main); padding: 24px; border-radius: var(--radius-md); border-left: 5px solid var(--danger);">
                 <h3 style="color: var(--danger); font-size: 1.25rem; margin-bottom: 12px;">
-                    {% if lang == 'te' %}సమస్య సవాలు{% else %}Problem Statement{% endif %}
+                    {% if lang == 'te' %}సమస్య సవాలు{% else %}The Challenge{% endif %}
                 </h3>
                 <p style="font-size: 1rem; color: var(--text-muted); line-height: 1.6;">
                     {% if lang == 'te' %}
                         చిన్న అక్షరాలు, కష్టమైన ఇంగ్లీష్ భాష, మరియు నిరంతరం మారుతున్న యాప్ ఇంటర్‌ఫేస్‌ల వల్ల సీనియర్లు ఇతరులపై ఆధారపడుతున్నారు. సైబర్ నేరగాళ్లు వీరి అమాయకత్వాన్ని ఆసరాగా చేసుకుని OTP మరియు నకిలీ బిల్లుల ద్వారా మోసగిస్తున్నారు.
                     {% else %}
-                        Elderly citizens struggle with small fonts, rapid UI changes, and complex English terminology. Fraudsters increasingly exploit their trust through electricity bill threats, remote-access screen apps, and lottery calls.
+                        Elderly citizens frequently struggle with small fonts, unfamiliar smartphone interfaces, and fast-paced digital apps. Cyber fraudsters increasingly target seniors through electricity bill threats, remote-access screen apps, and deceptive payment links.
                     {% endif %}
                 </p>
             </div>
 
             <div style="background: var(--bg-main); padding: 24px; border-radius: var(--radius-md); border-left: 5px solid var(--success);">
                 <h3 style="color: var(--success); font-size: 1.25rem; margin-bottom: 12px;">
-                    {% if lang == 'te' %}పరిష్కారం{% else %}The Solution{% endif %}
+                    {% if lang == 'te' %}పరిష్కారం{% else %}Our Approach{% endif %}
                 </h3>
                 <p style="font-size: 1rem; color: var(--text-muted); line-height: 1.6;">
                     {% if lang == 'te' %}
-                        డిజిటల్ సాథీ ద్వారా స్థానిక భాషలో (తెలుగు & ఇంగ్లీష్), పెద్ద అక్షరాలతో, ఓపికగా నేర్పించే విద్యార్థి వాలంటీర్ నెట్‌వర్క్‌ను అందుబాటులోకి తెచ్చాము. దీని ద్వారా సీనియర్లు ధైర్యంగా సాంకేతికతను వాడగలుగుతారు.
+                        డిజిటల్ సాథీ ద్వారా స్థానిక భాషలో (తెలుగు & ఇంగ్లీష్), పెద్ద అక్షరాలతో, ఓపికగా నేర్పించే వాలంటీర్ నెట్‌వర్క్‌ను అందుబాటులోకి తెచ్చాము. దీని ద్వారా సీనియర్లు ధైర్యంగా సాంకేతికతను వాడగలుగుతారు.
                     {% else %}
-                        DigitalSaathi offers a high-contrast bilingual portal with large fonts, real-world scam scenario quizzes, step-by-step smartphone guides, and a 1-to-1 volunteer support request matching engine.
+                        DigitalSaathi offers high-contrast bilingual guides with large fonts, real-world scam scenario quizzes, step-by-step smartphone tutorials, and a dedicated 1-to-1 volunteer support request system.
                     {% endif %}
                 </p>
             </div>
 
             <div style="background: var(--bg-main); padding: 24px; border-radius: var(--radius-md); border-left: 5px solid var(--primary);">
                 <h3 style="color: var(--primary); font-size: 1.25rem; margin-bottom: 12px;">
-                    {% if lang == 'te' %}లబ్ధిదారులు{% else %}Intended Beneficiaries{% endif %}
+                    {% if lang == 'te' %}లబ్ధిదారులు{% else %}Who It Is For{% endif %}
                 </h3>
                 <p style="font-size: 1rem; color: var(--text-muted); line-height: 1.6;">
                     {% if lang == 'te' %}
-                        గ్రామీణ మరియు పట్టణ ప్రాంతాల్లోని 60 ఏళ్లు పైబడిన సీనియర్ పౌరులు, పెన్షనర్లు మరియు వారి కుటుంబ సభ్యులు.
+                        గ్రామీణ మరియు పట్టణ ప్రాంతాల్లోని 60 ఏళ్లు పైబడిన సీనియర్ పౌరులు, పెన్షనర్లు మరియు సాంకేతికత వాడకంలో భయపడే పెద్దలు.
                     {% else %}
-                        Senior citizens aged 60+, retired pensioners, tech-hesitant elders living alone, and local community elders in our neighborhood adopted villages.
+                        Senior citizens aged 60+, retired pensioners, tech-hesitant elders living independently, and anyone wishing to guide their elderly parents or relatives in digital safety.
                     {% endif %}
                 </p>
             </div>
         </div>
 
-        <div style="background: #E8F5E9; border: 2px solid #C8E6C9; border-radius: var(--radius-md); padding: 24px; margin-bottom: 30px;">
-            <h3 style="color: #1B5E20; font-size: 1.3rem; margin-bottom: 12px;">
-                {% if lang == 'te' %}విద్యా ప్రాజెక్ట్ వివరాలు{% else %}Academic Project Affiliation{% endif %}
+        <div style="background: var(--primary-light); border: 2px solid #BBDEFB; border-radius: var(--radius-md); padding: 28px; text-align: center;">
+            <h3 style="color: var(--primary-dark); font-size: 1.35rem; margin-bottom: 12px;">
+                {% if lang == 'te' %}ఈరోజే నేర్చుకోవడం ప్రారంభించండి{% else %}Get Started with DigitalSaathi Today{% endif %}
             </h3>
-            <p style="font-size: 1.05rem; line-height: 1.6; color: #2E7D32;">
-                <strong>Institution:</strong> Vasireddy Venkatadri Institute of Technology (VVIT), Nambur, Guntur.<br>
-                <strong>Program:</strong> B.Tech 3rd Year (3-1 Semester) Community Service Project (CSP).<br>
-                <strong>Supervision:</strong> Department of Computer Science & Engineering.<br>
-                <strong>Scope of Work:</strong> Door-to-door community interaction, identifying seniors' digital challenges, developing this web portal, and conducting interactive awareness camps.
+            <p style="font-size: 1.05rem; color: var(--text-main); margin-bottom: 20px; max-width: 650px; margin-left: auto; margin-right: auto;">
+                {% if lang == 'te' %}
+                    స్మార్ట్‌ఫోన్ పాఠాలను చదవండి లేదా మీకు వ్యక్తిగత సాంకేతిక సహాయం కావాలంటే ఒక అభ్యర్థనను సమర్పించండి.
+                {% else %}
+                    Explore our step-by-step guides or request one-on-one assistance whenever you face any technical hurdle.
+                {% endif %}
             </p>
-        </div>
-
-        <div class="activities-grid">
-            <div class="activity-photo-card">
-                <img src="{{ url_for('static', filename='images/activities/activity1.jpeg') }}" alt="Field activity 1">
-                <div class="activity-caption">Direct interaction with community seniors</div>
-            </div>
-            <div class="activity-photo-card">
-                <img src="{{ url_for('static', filename='images/activities/activity2.jpeg') }}" alt="Field activity 2">
-                <div class="activity-caption">Teaching safe app installation</div>
-            </div>
-            <div class="activity-photo-card">
-                <img src="{{ url_for('static', filename='images/activities/activity3.jpeg') }}" alt="Field activity 3">
-                <div class="activity-caption">UPI safety awareness session</div>
-            </div>
-            <div class="activity-photo-card">
-                <img src="{{ url_for('static', filename='images/activities/activity4.jpeg') }}" alt="Field activity 4">
-                <div class="activity-caption">Field work and survey verification</div>
+            <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+                <a href="{{ url_for('tutorials') }}" class="btn btn-primary btn-sm">{{ t('btn_start_learning') }}</a>
+                <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-sm">{{ t('btn_request_help') }}</a>
             </div>
         </div>
     </div>

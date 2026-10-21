@@ -10,9 +10,9 @@
             <h1>{{ t('btn_request_help') }}</h1>
             <p>
                 {% if lang == 'te' %}
-                    స్మార్ట్‌ఫోన్ లేదా ఆన్‌లైన్ చెల్లింపుల సమస్యపై మా విద్యార్థి వాలంటీర్ సహాయం పొందండి.
+                    స్మార్ట్‌ఫోన్ లేదా ఆన్‌లైన్ సేవల సమస్యలపై మా వాలంటీర్ సహాయం పొందండి.
                 {% else %}
-                    Submit your request and a dedicated VVIT student volunteer will assist you patiently over call or in-person.
+                    Submit your request and a dedicated volunteer will assist you patiently over call or in-person.
                 {% endif %}
             </p>
         </div>
@@ -48,10 +48,10 @@
             </button>
         </form>
 
-        <div style="margin-top: 30px; text-align: center; padding-top: 20px; border-top: 1px solid var(--border-color);">
-            <a href="{{ url_for('help_history') }}" class="btn btn-outline btn-sm">
-                {% if lang == 'te' %}నా మునుపటి అభ్యర్థనల చరిత్ర చూడండి{% else %}View My Request History{% endif %} &rarr;
-            </a>
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <p style="font-size: 1.05rem;">
+                <a href="{{ url_for('help_history') }}" style="font-weight: 700;">&rarr; {{ t('nav_my_requests') }}</a>
+            </p>
         </div>
     </div>
 </div>

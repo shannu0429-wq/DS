@@ -47,43 +47,71 @@ def set_language(lang):
 
 @app.route('/')
 def index():
-    seniors_count = 0
-    tutorials_count = 0
-    resolved_count = 0
-    volunteers_count = 0
     recent_tutorials = []
-
     try:
-        s_res = query_db("SELECT COUNT(*) as count FROM users WHERE role = 'senior'", one=True)
-        if s_res:
-            seniors_count = s_res['count']
-
-        t_res = query_db("SELECT COUNT(*) as count FROM tutorial_progress WHERE completed = 1", one=True)
-        if t_res:
-            tutorials_count = t_res['count']
-
-        r_res = query_db("SELECT COUNT(*) as count FROM help_requests WHERE status = 'Resolved'", one=True)
-        if r_res:
-            resolved_count = r_res['count']
-
-        v_res = query_db("SELECT COUNT(*) as count FROM users WHERE role = 'volunteer'", one=True)
-        if v_res:
-            volunteers_count = v_res['count']
-
         recent_tutorials = query_db(
             "SELECT id, category, title_en, title_te, description_en, description_te, icon FROM tutorials ORDER BY display_order ASC LIMIT 4"
         )
     except Exception:
-        pass
+        recent_tutorials = []
 
-    return render_template(
-        'index.html',
-        seniors_count=seniors_count,
-        tutorials_count=tutorials_count,
-        resolved_count=resolved_count,
-        volunteers_count=volunteers_count,
-        recent_tutorials=recent_tutorials
-    )
+    return render_template('index.html', recent_tutorials=recent_tutorials)
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/smartphone-basics')
+def smartphone_basics():
+    return render_template('smartphone_basics.html')
+
+@app.route('/payment-safety')
+def payment_safety():
+    return render_template('payment_safety.html')
+
+@app.route('/scam-awareness')
+def scam_awareness():
+    return render_template('scam_awareness.html')
+
+@app.route('/quiz')
+def quiz_page():
+    return render_template('quiz.html')
+
+@app.route('/quiz/submit', methods=['POST'])
+def quiz_submit():
+    data = request.get_json() or {}
+    score = int(data.get('score', 0))
+    total = int(data.get('total_questions', 5))
+    topic = data.get('topic', 'Scam Awareness Quiz')
+    percentage = round((score / total) * 100, 2) if total > 0 else 0
+
+    user_id = session.get('user_id')
+    try:
+        query_db(
+            "INSERT INTO quiz_results (user_id, score, total_questions, percentage, topic) VALUES (%s, %s, %s, %s, %s)",
+            (user_id, score, total, percentage, topic),
+            commit=True
+        )
+        return jsonify({'success': True, 'score': score, 'total': total, 'percentage': percentage})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        subject = request.form.get('subject', '').strip()
+        message = request.form.get('message', '').strip()
+
+        if not name or not email or not subject or not message:
+            flash('Please complete all required fields.', 'warning')
+            return render_template('contact.html')
+
+        flash('Thank you for reaching out to DigitalSaathi. Your message has been received.', 'success')
+        return redirect(url_for('contact'))
+
+    return render_template('contact.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -216,6 +244,51 @@ def logout():
     flash('You have been logged out safely.', 'info')
     return redirect(url_for('login'))
 
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form.get('email', '').strip().lower()
+        mobile = request.form.get('mobile_number', '').strip()
+        new_password = request.form.get('new_password', '')
+        confirm_password = request.form.get('confirm_password', '')
+
+        if not email or not mobile or not new_password or not confirm_password:
+            flash('All fields are required.', 'warning')
+            return render_template('forgot_password.html')
+
+        if new_password != confirm_password:
+            flash('New passwords do not match.', 'danger')
+            return render_template('forgot_password.html')
+
+        if len(new_password) < 6:
+            flash('Password must be at least 6 characters long.', 'danger')
+            return render_template('forgot_password.html')
+
+        digits_mobile = re.sub(r'\D', '', mobile)
+
+        try:
+            user = query_db(
+                "SELECT id FROM users WHERE email = %s AND mobile_number = %s AND is_active = 1",
+                (email, digits_mobile),
+                one=True
+            )
+            if not user:
+                flash('No active account matches the provided email and mobile number.', 'danger')
+                return render_template('forgot_password.html')
+
+            p_hash = hash_password(new_password)
+            query_db(
+                "UPDATE users SET password_hash = %s WHERE id = %s",
+                (p_hash, user['id']),
+                commit=True
+            )
+            flash('Your password has been reset successfully. Please log in with your new password.', 'success')
+            return redirect(url_for('login'))
+        except Exception:
+            flash('Failed to reset password due to database error.', 'danger')
+
+    return render_template('forgot_password.html')
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
@@ -261,6 +334,75 @@ def dashboard():
         my_requests=my_requests,
         tutorials=tutorials_list
     )
+
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    user_id = session.get('user_id')
+    user = query_db("SELECT id, full_name, email, mobile_number, role, preferred_language FROM users WHERE id = %s", (user_id,), one=True)
+    if not user:
+        abort(404)
+
+    if request.method == 'POST':
+        full_name = request.form.get('full_name', '').strip()
+        mobile = request.form.get('mobile_number', '').strip()
+        preferred_lang = request.form.get('preferred_language', 'en')
+        current_pwd = request.form.get('current_password', '')
+        new_pwd = request.form.get('new_password', '')
+        confirm_pwd = request.form.get('confirm_password', '')
+
+        if not full_name or not mobile:
+            flash('Name and mobile number are required.', 'warning')
+            return render_template('profile.html', user=user)
+
+        digits_mobile = re.sub(r'\D', '', mobile)
+        if len(digits_mobile) < 10:
+            flash('Please enter a valid 10-digit mobile number.', 'warning')
+            return render_template('profile.html', user=user)
+
+        if preferred_lang not in ['en', 'te']:
+            preferred_lang = 'en'
+
+        try:
+            if new_pwd:
+                if not current_pwd:
+                    flash('Current password is required to set a new password.', 'warning')
+                    return render_template('profile.html', user=user)
+
+                auth_user = query_db("SELECT password_hash FROM users WHERE id = %s", (user_id,), one=True)
+                if not auth_user or not verify_password(auth_user['password_hash'], current_pwd):
+                    flash('Current password is incorrect.', 'danger')
+                    return render_template('profile.html', user=user)
+
+                if new_pwd != confirm_pwd:
+                    flash('New passwords do not match.', 'danger')
+                    return render_template('profile.html', user=user)
+
+                if len(new_pwd) < 6:
+                    flash('New password must be at least 6 characters.', 'danger')
+                    return render_template('profile.html', user=user)
+
+                p_hash = hash_password(new_pwd)
+                query_db(
+                    "UPDATE users SET full_name = %s, mobile_number = %s, preferred_language = %s, password_hash = %s WHERE id = %s",
+                    (full_name, digits_mobile, preferred_lang, p_hash, user_id),
+                    commit=True
+                )
+            else:
+                query_db(
+                    "UPDATE users SET full_name = %s, mobile_number = %s, preferred_language = %s WHERE id = %s",
+                    (full_name, digits_mobile, preferred_lang, user_id),
+                    commit=True
+                )
+
+            session['user_name'] = full_name
+            session['lang'] = preferred_lang
+            flash('Profile updated successfully.', 'success')
+            return redirect(url_for('profile'))
+        except Exception:
+            flash('Error updating profile.', 'danger')
+
+    return render_template('profile.html', user=user)
 
 @app.route('/tutorials')
 def tutorials():
@@ -317,33 +459,6 @@ def complete_tutorial(tutorial_id):
     except Exception:
         flash('Could not update tutorial progress.', 'danger')
     return redirect(url_for('tutorial_detail', tutorial_id=tutorial_id))
-
-@app.route('/payment-safety')
-def payment_safety():
-    return render_template('payment_safety.html')
-
-@app.route('/scam-awareness')
-def scam_awareness():
-    return render_template('scam_awareness.html')
-
-@app.route('/quiz/submit', methods=['POST'])
-def quiz_submit():
-    data = request.get_json() or {}
-    score = int(data.get('score', 0))
-    total = int(data.get('total_questions', 5))
-    topic = data.get('topic', 'Scam Awareness Quiz')
-    percentage = round((score / total) * 100, 2) if total > 0 else 0
-
-    user_id = session.get('user_id')
-    try:
-        query_db(
-            "INSERT INTO quiz_results (user_id, score, total_questions, percentage, topic) VALUES (%s, %s, %s, %s, %s)",
-            (user_id, score, total, percentage, topic),
-            commit=True
-        )
-        return jsonify({'success': True, 'score': score, 'total': total, 'percentage': percentage})
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/request-help', methods=['GET', 'POST'])
 @login_required
@@ -423,6 +538,28 @@ def volunteer_dashboard():
         in_progress_count=in_progress_count,
         resolved_count=resolved_count
     )
+
+@app.route('/volunteer/requests/<int:request_id>')
+@role_required(['volunteer', 'admin'])
+def volunteer_request_detail(request_id):
+    volunteer_id = session.get('user_id')
+    user_role = session.get('user_role')
+
+    try:
+        req = query_db(
+            "SELECT hr.*, senior.full_name as senior_name, senior.mobile_number as senior_mobile, senior.email as senior_email, vol.full_name as volunteer_name FROM help_requests hr JOIN users senior ON hr.user_id = senior.id LEFT JOIN users vol ON hr.volunteer_id = vol.id WHERE hr.id = %s",
+            (request_id,),
+            one=True
+        )
+        if not req:
+            abort(404)
+
+        if user_role != 'admin' and req['volunteer_id'] != volunteer_id:
+            abort(403)
+
+        return render_template('volunteer_request_detail.html', req=req)
+    except Exception:
+        abort(404)
 
 @app.route('/volunteer/request/<int:request_id>/update', methods=['POST'])
 @role_required(['volunteer', 'admin'])
@@ -618,13 +755,49 @@ def delete_tutorial(tutorial_id):
         flash('Failed to delete tutorial.', 'danger')
     return redirect(url_for('manage_tutorials'))
 
+@app.route('/admin/requests')
+@role_required(['admin'])
+def admin_requests():
+    status_filter = request.args.get('status')
+    try:
+        all_reqs = query_db(
+            "SELECT hr.*, senior.full_name as senior_name, senior.mobile_number as senior_mobile, vol.full_name as volunteer_name FROM help_requests hr JOIN users senior ON hr.user_id = senior.id LEFT JOIN users vol ON hr.volunteer_id = vol.id ORDER BY hr.created_at DESC"
+        )
+        volunteers = query_db("SELECT id, full_name FROM users WHERE role = 'volunteer' AND is_active = 1")
+    except Exception:
+        all_reqs = []
+        volunteers = []
+
+    all_count = len(all_reqs)
+    pending_count = sum(1 for r in all_reqs if r['status'] == 'Pending')
+    assigned_count = sum(1 for r in all_reqs if r['status'] == 'Assigned')
+    in_progress_count = sum(1 for r in all_reqs if r['status'] == 'In Progress')
+    resolved_count = sum(1 for r in all_reqs if r['status'] == 'Resolved')
+
+    if status_filter:
+        filtered_reqs = [r for r in all_reqs if r['status'] == status_filter]
+    else:
+        filtered_reqs = all_reqs
+
+    return render_template(
+        'manage_requests.html',
+        requests=filtered_reqs,
+        volunteers=volunteers,
+        selected_status=status_filter,
+        all_count=all_count,
+        pending_count=pending_count,
+        assigned_count=assigned_count,
+        in_progress_count=in_progress_count,
+        resolved_count=resolved_count
+    )
+
 @app.route('/admin/requests/<int:request_id>/assign', methods=['POST'])
 @role_required(['admin'])
 def assign_request(request_id):
     volunteer_id = request.form.get('volunteer_id')
     if not volunteer_id:
         flash('Please select a volunteer.', 'warning')
-        return redirect(url_for('admin_dashboard'))
+        return redirect(request.referrer or url_for('admin_dashboard'))
 
     try:
         query_db(
@@ -632,19 +805,53 @@ def assign_request(request_id):
             (volunteer_id, request_id),
             commit=True
         )
+        try:
+            admin_id = session.get('user_id')
+            query_db(
+                "INSERT INTO request_assignments (request_id, volunteer_id, assigned_by) VALUES (%s, %s, %s)",
+                (request_id, volunteer_id, admin_id),
+                commit=True
+            )
+        except Exception:
+            pass
         flash('Help request assigned to volunteer.', 'success')
     except Exception:
         flash('Failed to assign volunteer.', 'danger')
 
-    return redirect(url_for('admin_dashboard'))
+    return redirect(request.referrer or url_for('admin_dashboard'))
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
+@app.route('/admin/categories', methods=['GET', 'POST'])
+@role_required(['admin'])
+def manage_categories():
+    if request.method == 'POST':
+        slug = request.form.get('slug', '').strip().lower()
+        name_en = request.form.get('name_en', '').strip()
+        name_te = request.form.get('name_te', '').strip()
+        desc_en = request.form.get('description_en', '').strip()
+        desc_te = request.form.get('description_te', '').strip()
 
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
+        if not slug or not name_en or not name_te:
+            flash('Slug, English name, and Telugu name are required.', 'warning')
+            return redirect(url_for('manage_categories'))
+
+        slug = re.sub(r'[^a-z0-9_]', '', slug)
+        try:
+            query_db(
+                "INSERT INTO tutorial_categories (slug, name_en, name_te, description_en, description_te) VALUES (%s, %s, %s, %s, %s)",
+                (slug, name_en, name_te, desc_en, desc_te),
+                commit=True
+            )
+            flash('Category created successfully.', 'success')
+        except Exception:
+            flash('Failed to create category or category slug already exists.', 'danger')
+        return redirect(url_for('manage_categories'))
+
+    try:
+        categories = query_db("SELECT * FROM tutorial_categories ORDER BY id ASC")
+    except Exception:
+        categories = []
+
+    return render_template('manage_categories.html', categories=categories)
 
 @app.route('/health')
 def health_check():

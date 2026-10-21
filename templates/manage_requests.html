@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div style="background: linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%); color: #FFFFFF; border-radius: var(--radius-lg); padding: 36px 30px; margin-bottom: 32px; box-shadow: var(--shadow-md);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <span class="status-badge" style="background: rgba(255,255,255,0.2); color: #FFFFFF; border: 1px solid rgba(255,255,255,0.4); margin-bottom: 8px;">
+                    {{ t('role_admin') }}
+                </span>
+                <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 8px;">{{ t('nav_manage_requests') }}</h1>
+                <p style="font-size: 1.15rem; color: #E1BEE7;">
+                    Review, assign, and monitor senior citizen assistance requests and volunteer resolutions.
+                </p>
+            </div>
+            <div>
+                <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline" style="border-color:#FFFFFF; color:#FFFFFF !important;">
+                    &larr; {{ t('nav_admin_panel') }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;">
+        <a href="{{ url_for('admin_requests') }}" class="btn btn-sm {% if not selected_status %}btn-primary{% else %}btn-outline{% endif %}">
+            All ({{ all_count }})
+        </a>
+        <a href="{{ url_for('admin_requests', status='Pending') }}" class="btn btn-sm {% if selected_status == 'Pending' %}btn-primary{% else %}btn-outline{% endif %}">
+            Pending ({{ pending_count }})
+        </a>
+        <a href="{{ url_for('admin_requests', status='Assigned') }}" class="btn btn-sm {% if selected_status == 'Assigned' %}btn-primary{% else %}btn-outline{% endif %}">
+            Assigned ({{ assigned_count }})
+        </a>
+        <a href="{{ url_for('admin_requests', status='In Progress') }}" class="btn btn-sm {% if selected_status == 'In Progress' %}btn-primary{% else %}btn-outline{% endif %}">
+            In Progress ({{ in_progress_count }})
+        </a>
+        <a href="{{ url_for('admin_requests', status='Resolved') }}" class="btn btn-sm {% if selected_status == 'Resolved' %}btn-primary{% else %}btn-outline{% endif %}">
+            Resolved ({{ resolved_count }})
+        </a>
+    </div>
+
+    <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-sm);">
+        {% if requests %}
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Senior Citizen</th>
+                            <th>Subject & Description</th>
+                            <th>Status</th>
+                            <th>Assigned Volunteer</th>
+                            <th>Assign Volunteer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for req in requests %}
+                            <tr>
+                                <td>#{{ req.id }}</td>
+                                <td>{{ req.created_at.strftime('%d-%b-%Y') if req.created_at else '' }}</td>
+                                <td>
+                                    <strong>{{ req.senior_name }}</strong><br>
+                                    <span style="font-size: 0.85rem; color: var(--text-muted);">{{ req.senior_mobile }}</span>
+                                </td>
+                                <td>
+                                    <strong>{{ req.subject }}</strong>
+                                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; max-width: 320px;">
+                                        {{ req.description[:90] }}{% if req.description|length > 90 %}...{% endif %}
+                                    </p>
+                                </td>
+                                <td>
+                                    {% if req.status == 'Pending' %}
+                                        <span class="status-badge badge-pending">{{ req.status }}</span>
+                                    {% elif req.status == 'Assigned' %}
+                                        <span class="status-badge badge-assigned">{{ req.status }}</span>
+                                    {% elif req.status == 'In Progress' %}
+                                        <span class="status-badge badge-in-progress">{{ req.status }}</span>
+                                    {% elif req.status == 'Resolved' %}
+                                        <span class="status-badge badge-resolved">{{ req.status }}</span>
+                                    {% else %}
+                                        <span class="status-badge badge-closed">{{ req.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if req.volunteer_name %}
+                                        <span style="font-weight: 700; color: var(--primary);">{{ req.volunteer_name }}</span>
+                                    {% else %}
+                                        <span style="color: var(--danger); font-weight: 700;">Unassigned</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('assign_request', request_id=req.id) }}" style="display: flex; gap: 6px; align-items: center;">
+                                        <select name="volunteer_id" class="form-control" style="padding: 6px 8px; font-size: 0.85rem; min-width: 130px;" required>
+                                            <option value="">Select</option>
+                                            {% for vol in volunteers %}
+                                                <option value="{{ vol.id }}" {% if req.volunteer_id == vol.id %}selected{% endif %}>{{ vol.full_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn btn-primary btn-sm" style="padding: 6px 10px; font-size: 0.8rem;">Save</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p style="color: var(--text-muted); font-size: 1.1rem; text-align: center; padding: 20px;">No requests found matching this filter.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

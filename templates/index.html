@@ -4,18 +4,18 @@
 <section class="hero-section">
     <div class="hero-grid">
         <div class="hero-text-block">
-            <span class="hero-badge">Community Service Project</span>
+            <span class="hero-badge">{% if lang == 'te' %}డిజిటల్ అక్షరాస్యత & భద్రత{% else %}Digital Literacy & Online Safety{% endif %}</span>
             <h1 class="hero-heading">{{ t('tagline') }}</h1>
             <p class="hero-description">{{ t('sub_tagline') }}</p>
             <div class="hero-actions">
                 <a href="{{ url_for('tutorials') }}" class="btn btn-primary btn-lg">{{ t('btn_start_learning') }}</a>
-                <a href="{{ url_for('payment_safety') }}" class="btn btn-outline btn-lg">{{ t('btn_stay_safe') }}</a>
+                <a href="{{ url_for('smartphone_basics') }}" class="btn btn-outline btn-lg">{{ t('nav_smartphone_basics') }}</a>
                 <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-lg">{{ t('btn_request_help') }}</a>
             </div>
         </div>
         <div class="hero-image-card">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="DigitalSaathi Helping Senior Citizens">
-            <div style="margin-top: 16px; font-weight: 700; color: var(--primary-dark); font-size: 1.15rem;">
+            <div style="margin-top: 16px; font-weight: 700; color: var(--primary-dark); font-size: 1.15rem; text-align: center;">
                 {% if lang == 'te' %}
                     సీనియర్లకు సాంకేతిక నేస్తం — డిజిటల్ సాథీ
                 {% else %}
@@ -37,7 +37,7 @@
             <div class="feature-icon-wrapper">&#128241;</div>
             <h3>{{ t('card_smartphone_title') }}</h3>
             <p>{{ t('card_smartphone_desc') }}</p>
-            <a href="{{ url_for('tutorials') }}" class="btn btn-outline btn-sm">{{ t('btn_start_learning') }} &rarr;</a>
+            <a href="{{ url_for('smartphone_basics') }}" class="btn btn-outline btn-sm">{{ t('btn_start_learning') }} &rarr;</a>
         </div>
 
         <div class="feature-card">
@@ -51,7 +51,7 @@
             <div class="feature-icon-wrapper" style="background:#FFEBEE; color:#C62828;">&#128737;</div>
             <h3>{{ t('card_scam_title') }}</h3>
             <p>{{ t('card_scam_desc') }}</p>
-            <a href="{{ url_for('scam_awareness') }}" class="btn btn-outline btn-sm">{{ t('btn_take_quiz') }} &rarr;</a>
+            <a href="{{ url_for('scam_awareness') }}" class="btn btn-outline btn-sm">{{ t('btn_view_details') }} &rarr;</a>
         </div>
 
         <div class="feature-card">
@@ -59,37 +59,6 @@
             <h3>{{ t('card_volunteer_title') }}</h3>
             <p>{{ t('card_volunteer_desc') }}</p>
             <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-sm">{{ t('btn_request_help') }} &rarr;</a>
-        </div>
-    </div>
-</section>
-
-<section class="stats-section">
-    <div class="section-title-wrap" style="color: #FFFFFF; margin-bottom: 24px;">
-        <h2 class="section-title" style="color: #FFFFFF;">{{ t('impact_title') }}</h2>
-        <p class="section-subtitle" style="color: #E3F2FD;">
-            {% if lang == 'te' %}
-                మా క్షేత్రస్థాయి పరిశోధన మరియు ప్రత్యక్ష కమ్యూనిటీ సర్వీస్ ద్వారా సాధించిన ఫలితాలు
-            {% else %}
-                Real progress achieved through field surveys, elder visits, and digital workshops
-            {% endif %}
-        </p>
-    </div>
-    <div class="stats-grid">
-        <div class="stat-item">
-            <div class="stat-number">{{ seniors_count }}</div>
-            <div class="stat-label">{{ t('stat_seniors_helped') }}</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">{{ tutorials_count }}</div>
-            <div class="stat-label">{{ t('stat_tutorials_completed') }}</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">{{ resolved_count }}</div>
-            <div class="stat-label">{{ t('stat_requests_resolved') }}</div>
-        </div>
-        <div class="stat-item">
-            <div class="stat-number">{{ volunteers_count }}</div>
-            <div class="stat-label">{{ t('stat_active_volunteers') }}</div>
         </div>
     </div>
 </section>
@@ -125,52 +94,21 @@
     </div>
 </section>
 
-<section class="content-container" style="background: #FFFFFF; border-radius: var(--radius-lg); padding: 40px 24px; margin-bottom: 40px; border: 1px solid var(--border-color);">
-    <div class="section-title-wrap">
-        <h2 class="section-title">{{ t('activities_title') }}</h2>
-        <p class="section-subtitle">{{ t('activities_subtitle') }}</p>
-    </div>
-
-    <div class="activities-grid">
-        <div class="activity-photo-card">
-            <img src="{{ url_for('static', filename='images/activities/activity1.jpeg') }}" alt="Senior citizen learning smartphone">
-            <div class="activity-caption">
-                {% if lang == 'te' %}
-                    సీనియర్ పౌరుడితో ఒకరితో ఒకరు స్మార్ట్‌ఫోన్ శిక్షణ
-                {% else %}
-                    One-on-one smartphone guidance with elderly resident
-                {% endif %}
-            </div>
-        </div>
-        <div class="activity-photo-card">
-            <img src="{{ url_for('static', filename='images/activities/activity2.jpeg') }}" alt="Volunteer demonstrating app installation">
-            <div class="activity-caption">
-                {% if lang == 'te' %}
-                    వాలంటీర్ ద్వారా సురక్షిత యాప్ ఇన్‌స్టాలేషన్ ప్రదర్శన
-                {% else %}
-                    Student volunteer demonstrating safe app installation
-                {% endif %}
-            </div>
-        </div>
-        <div class="activity-photo-card">
-            <img src="{{ url_for('static', filename='images/activities/activity3.jpeg') }}" alt="Explaining UPI fraud prevention">
-            <div class="activity-caption">
-                {% if lang == 'te' %}
-                    UPI సైబర్ మోసాల నివారణపై సీనియర్లకు అవగాహన
-                {% else %}
-                    Explaining UPI cyber fraud prevention & OTP safety
-                {% endif %}
-            </div>
-        </div>
-        <div class="activity-photo-card">
-            <img src="{{ url_for('static', filename='images/activities/activity4.jpeg') }}" alt="Community service interaction session">
-            <div class="activity-caption">
-                {% if lang == 'te' %}
-                    స్థానిక పరిసరాల్లో కమ్యూనిటీ సర్వీస్ ఫీల్డ్ వర్క్
-                {% else %}
-                    Community Service Project field survey in local neighborhood
-                {% endif %}
-            </div>
+<section class="content-container">
+    <div style="background: linear-gradient(135deg, #0D47A1, #1976D2); color: #FFFFFF; border-radius: var(--radius-lg); padding: 48px 32px; text-align: center; box-shadow: var(--shadow-md);">
+        <h2 style="font-size: 2rem; margin-bottom: 16px; color: #FFFFFF;">
+            {% if lang == 'te' %}మీ సైబర్ భద్రతా నైపుణ్యాలను పరీక్షించుకోండి{% else %}Test Your Cyber Safety Reflexes{% endif %}
+        </h2>
+        <p style="font-size: 1.15rem; color: #E3F2FD; max-width: 720px; margin: 0 auto 24px auto; line-height: 1.6;">
+            {% if lang == 'te' %}
+                రోజువారీ జీవితంలో ఎదురయ్యే సైబర్ మోసాలు మరియు అనుమానాస్పద లింకులపై మా సరళమైన భద్రతా క్విజ్ రాయండి.
+            {% else %}
+                Take our quick, interactive safety quiz designed around realistic everyday phone scenarios. Instant explanations provided.
+            {% endif %}
+        </p>
+        <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+            <a href="{{ url_for('quiz_page') }}" class="btn btn-accent btn-lg">&#9997; {{ t('btn_take_quiz') }}</a>
+            <a href="{{ url_for('tutorials') }}" class="btn btn-outline btn-lg" style="border-color: #FFFFFF; color: #FFFFFF !important;">{{ t('nav_learn') }}</a>
         </div>
     </div>
 </section>

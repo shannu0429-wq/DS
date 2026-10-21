@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div class="section-title-wrap">
+        <span class="status-badge badge-resolved" style="font-size: 0.95rem; margin-bottom: 8px;">
+            {% if lang == 'te' %}ఇంటరాక్టివ్ భద్రతా పరీక్ష{% else %}Interactive Safety Check{% endif %}
+        </span>
+        <h1 class="section-title">{{ t('quiz_title') }}</h1>
+        <p class="section-subtitle">{{ t('quiz_subtitle') }}</p>
+    </div>
+
+    <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 40px; box-shadow: var(--shadow-sm); margin-bottom: 40px;">
+        <div id="quiz-questions-container">
+        </div>
+
+        <div id="quiz-score-banner" class="quiz-score-banner">
+            <h3 style="font-size: 1.8rem; margin-bottom: 12px;">Quiz Complete!</h3>
+            <p id="quiz-score-text" style="font-size: 1.25rem; line-height: 1.6; margin-bottom: 24px;"></p>
+            <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+                <button type="button" onclick="location.reload()" class="btn btn-outline" style="border-color:#FFFFFF; color:#FFFFFF !important;">
+                    &#8635; {{ t('btn_retake_quiz') }}
+                </button>
+                <a href="{{ url_for('tutorials') }}" class="btn btn-outline" style="border-color:#FFFFFF; color:#FFFFFF !important;">
+                    {{ t('nav_learn') }}
+                </a>
+                <a href="{{ url_for('request_help') }}" class="btn btn-accent">
+                    &#129309; {{ t('btn_request_help') }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

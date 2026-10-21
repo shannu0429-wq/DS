@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div class="section-title-wrap">
+        <span class="status-badge badge-assigned" style="font-size: 0.95rem; margin-bottom: 8px;">
+            {% if lang == 'te' %}ప్రాథమిక సాంకేతిక మార్గదర్శి{% else %}Essential Tech Guide{% endif %}
+        </span>
+        <h1 class="section-title">{{ t('card_smartphone_title') }}</h1>
+        <p class="section-subtitle">
+            {% if lang == 'te' %}
+                కాలింగ్, కాంటాక్ట్స్, వాట్సాప్, వై-ఫై, సెట్టింగ్స్ మరియు యాక్సెసిబిలిటీని సులభంగా నేర్చుకోండి.
+            {% else %}
+                Master everyday smartphone essentials: calling, contacts, messaging, Wi-Fi, sound settings, and accessibility with ease.
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="cards-grid" style="margin-bottom: 40px;">
+        <div class="feature-card" style="border-top: 5px solid var(--primary);">
+            <div class="feature-icon-wrapper">&#128222;</div>
+            <h3>{% if lang == 'te' %}1. కాలింగ్ & డయలర్{% else %}1. Calling & Phone App{% endif %}</h3>
+            <p>
+                {% if lang == 'te' %}
+                    ఆకుపచ్చ ఫోన్ గుర్తుపై నొక్కి నంబర్ డయల్ చేయండి లేదా కాంటాక్ట్స్ నుండి కాల్ చేయండి. కాల్ వచ్చినప్పుడు సమాధానం ఇవ్వడానికి ఆకుపచ్చ బటన్‌ను పైకి స్వైప్ చేయండి.
+                {% else %}
+                    Open the Phone app (green handset icon). Tap the keypad to dial numbers, or swipe recent callers. To answer an incoming call, swipe up or tap the green receiver.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="feature-card" style="border-top: 5px solid #2E7D32;">
+            <div class="feature-icon-wrapper" style="background: #E8F5E9; color: #2E7D32;">&#128101;</div>
+            <h3>{% if lang == 'te' %}2. కాంటాక్ట్స్ సేవ్ చేయడం{% else %}2. Contacts & Favorites{% endif %}</h3>
+            <p>
+                {% if lang == 'te' %}
+                    కాంటాక్ట్స్ యాప్‌లో (+) చిహ్నాన్ని నొక్కి పేరు, మొబైల్ నంబర్ నమోదు చేసి 'సేవ్' నొక్కండి. మీ ముఖ్యమైన కుటుంబ సభ్యుల నంబర్లను 'Favorites' లో చేర్చండి.
+                {% else %}
+                    Open Contacts and tap (+) to add a family member or friend. Enter their name and phone number, then tap Save. Mark frequent contacts as Favorites for one-tap dialing.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="feature-card" style="border-top: 5px solid #00897B;">
+            <div class="feature-icon-wrapper" style="background: #E0F2F1; color: #00897B;">&#128172;</div>
+            <h3>{% if lang == 'te' %}3. మెసేజింగ్ & వాట్సాప్{% else %}3. Messaging & WhatsApp{% endif %}</h3>
+            <p>
+                {% if lang == 'te' %}
+                    వాట్సాప్‌లో వాయిస్ మెసేజ్ రికార్డ్ చేయడానికి మైక్ గుర్తును నొక్కి పట్టుకోండి. అపరిచిత వ్యక్తుల నుండి వచ్చే లింకులను ఎప్పుడూ క్లిక్ చేయవద్దు.
+                {% else %}
+                    Use WhatsApp to exchange messages, photos, and voice notes. Press and hold the microphone icon to send an audio message without having to type. Never tap unknown forwarded links.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="feature-card" style="border-top: 5px solid #1565C0;">
+            <div class="feature-icon-wrapper" style="background: #E3F2FD; color: #1565C0;">&#128246;</div>
+            <h3>{% if lang == 'te' %}4. వై-ఫై & మొబైల్ డేటా{% else %}4. Wi-Fi & Mobile Internet{% endif %}</h3>
+            <p>
+                {% if lang == 'te' %}
+                    స్క్రీన్ పైనుండి కిందికి స్వైప్ చేసి వై-ఫై గుర్తును రెండు సెకన్లు నొక్కండి. మీ ఇంటి వై-ఫైని ఎంచుకుని పాస్‌వర్డ్ ఇవ్వండి. బయట అపరిచిత ఉచిత వై-ఫై వాడవద్దు.
+                {% else %}
+                    Swipe down from the top edge of your screen. Tap and hold the Wi-Fi icon to select your home network and enter your router password. Avoid using public open Wi-Fi for banking.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="feature-card" style="border-top: 5px solid #E65100;">
+            <div class="feature-icon-wrapper" style="background: #FFF3E0; color: #E65100;">&#9881;</div>
+            <h3>{% if lang == 'te' %}5. శబ్దం & స్క్రీన్ సెట్టింగ్స్{% else %}5. Volume & Display Settings{% endif %}</h3>
+            <p>
+                {% if lang == 'te' %}
+                    ఫోన్ పక్కన ఉన్న వాల్యూమ్ బటన్లతో రింగ్‌టోన్ పెంచుకోండి. సెట్టింగ్స్‌లో 'Display' లోకి వెళ్లి 'Screen Timeout' ను 2 నిమిషాలకు మార్చండి, తద్వారా స్క్రీన్ వెంటనే ఆగిపోదు.
+                {% else %}
+                    Use side buttons to adjust ringer and in-call volume. In Settings &gt; Display, increase the Screen Timeout to 2 or 5 minutes so your screen does not turn off too quickly while reading.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="feature-card" style="border-top: 5px solid #6A1B9A;">
+            <div class="feature-icon-wrapper" style="background: #EDE7F6; color: #6A1B9A;">&#128065;</div>
+            <h3>{% if lang == 'te' %}6. సులభంగా చదివే సౌలభ్యం{% else %}6. Accessibility & Large Text{% endif %}</h3>
+            <p>
+                {% if lang == 'te' %}
+                    సెట్టింగ్స్ &gt; Accessibility లోకి వెళ్లి 'Font Size' మరియు 'Display Size' ను 'Large' చేయండి. అక్షరాలు స్పష్టంగా కనిపించడానికి 'High Contrast Text' ఆన్ చేయండి.
+                {% else %}
+                    Go to Settings &gt; Accessibility &gt; Text and Display. Increase the Font Size and Display Size slider. Turn on High-Contrast Text for easier reading without eye strain.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 36px; box-shadow: var(--shadow-sm); text-align: center;">
+        <h2 style="font-size: 1.6rem; color: var(--primary-dark); margin-bottom: 12px;">
+            {% if lang == 'te' %}మరింత వివరంగా నేర్చుకోవాలనుకుంటున్నారా?{% else %}Want Step-by-Step Practice Tutorials?{% endif %}
+        </h2>
+        <p style="font-size: 1.05rem; color: var(--text-muted); max-width: 680px; margin: 0 auto 24px auto;">
+            {% if lang == 'te' %}
+                మా పూర్తి ట్యుటోరియల్స్ కేటలాగ్‌లో చిత్రాలతో కూడిన పాఠాలను పరిశీలించండి లేదా ఒక వాలంటీర్ సహాయం కోరండి.
+            {% else %}
+                Browse our interactive tutorial lessons with step-by-step guidance, or request personal volunteer assistance if you need hands-on help.
+            {% endif %}
+        </p>
+        <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+            <a href="{{ url_for('tutorials') }}" class="btn btn-primary btn-lg">{{ t('nav_learn') }} &rarr;</a>
+            <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-lg">&#129309; {{ t('btn_request_help') }}</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
