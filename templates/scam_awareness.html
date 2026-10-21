@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div class="section-title-wrap">
+        <h1 class="section-title">{{ t('card_scam_title') }}</h1>
+        <p class="section-subtitle">
+            {% if lang == 'te' %}
+                సైబర్ నేరగాళ్లు సీనియర్ సిటిజన్లను ఎలా లక్ష్యంగా చేసుకుంటారో తెలుసుకోండి మరియు అప్రమత్తంగా ఉండండి.
+            {% else %}
+                Learn to spot the most common digital traps targeting senior citizens and test your safety reflex with our interactive quiz.
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="cards-grid" style="margin-bottom: 40px;">
+        <div class="feature-card" style="border-left: 6px solid #C62828;">
+            <div class="feature-icon-wrapper" style="background:#FFEBEE; color:#C62828;">&#128222;</div>
+            <h3>
+                {% if lang == 'te' %}నకిలీ కస్టమర్ కేర్ నంబర్లు{% else %}Fake Customer Care Numbers on Google{% endif %}
+            </h3>
+            <p>
+                {% if lang == 'te' %}
+                    గూగుల్‌లో కనిపించే మొదటి నంబర్లను ఎప్పుడూ నమ్మవద్దు. సైబర్ నేరగాళ్లు నకిలీ నంబర్లను అప్‌లోడ్ చేస్తారు. మీ ఒరిజినల్ బిల్లులు లేదా యాప్‌లలోని నంబర్లనే సంప్రదించండి.
+                {% else %}
+                    Fraudsters post fake helpline numbers on search engines. Never call phone numbers found on random Google search results for gas booking, banks, or couriers.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="feature-card" style="border-left: 6px solid #E65100;">
+            <div class="feature-icon-wrapper" style="background:#FFF3E0; color:#E65100;">&#128241;</div>
+            <h3>
+                {% if lang == 'te' %}AnyDesk మరియు స్క్రీన్ షేరింగ్ ఉచ్చులు{% else %}Remote Screen Sharing (AnyDesk / TeamViewer){% endif %}
+            </h3>
+            <p>
+                {% if lang == 'te' %}
+                    ఫోన్ కాల్‌లో ఎవరైనా AnyDesk, TeamViewer లేదా QuickSupport యాప్ ఇన్‌స్టాల్ చేయమని చెబితే తిరస్కరించండి. వారు మీ స్క్రీన్‌ను చూస్తూ డబ్బు దొంగిలిస్తారు.
+                {% else %}
+                    Never install AnyDesk or TeamViewer on instructions from phone callers. These tools allow outsiders to read OTPs and access your banking apps directly.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="feature-card" style="border-left: 6px solid #F57F17;">
+            <div class="feature-icon-wrapper" style="background:#FFFDE7; color:#F57F17;">&#9889;</div>
+            <h3>
+                {% if lang == 'te' %}కరెంట్ బిల్లు / పెన్షన్ బెదిరింపు ఎస్సెమ్మెస్‌లు{% else %}Urgent Threat & Disconnection SMS{% endif %}
+            </h3>
+            <p>
+                {% if lang == 'te' %}
+                    'ఈ రాత్రి కరెంట్ కట్ అవుతుంది', 'పాన్ కార్డు బ్లాక్ అయింది' అనే వ్యక్తిగత 10 అంకెల మొబైల్ నంబర్ల మెసేజ్‌లను నమ్మవద్దు. లింక్‌లను క్లిక్ చేయవద్దు.
+                {% else %}
+                    Scare tactics claiming electricity will be disconnected tonight or your bank account is blocked are fraudulent. Real agencies send formal written notices.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="feature-card" style="border-left: 6px solid #1565C0;">
+            <div class="feature-icon-wrapper" style="background:#E3F2FD; color:#1565C0;">&#127873;</div>
+            <h3>
+                {% if lang == 'te' %}నకిలీ లాటరీ & లక్కీ డ్రా బహుమతులు{% else %}Fake Lottery, KBC & Prize Offers{% endif %}
+            </h3>
+            <p>
+                {% if lang == 'te' %}
+                    మీరు కొనని లాటరీలో కోట్లు వచ్చాయని వాట్సాప్ సందేశాలు వస్తే అది మోసం. బహుమతి పన్ను లేదా ప్రాసెసింగ్ ఫీజు పేరుతో డబ్బు అడిగితే నమ్మకండి.
+                {% else %}
+                    Messages congratulating you for winning crores in lottery draws you never entered are scams designed to steal processing fees. Ignore them immediately.
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 40px; box-shadow: var(--shadow-md); margin-bottom: 40px;">
+        <div class="section-title-wrap" style="margin-bottom: 30px;">
+            <span class="status-badge badge-resolved" style="font-size: 0.95rem; margin-bottom: 8px;">Interactive Learning</span>
+            <h2 class="section-title">{{ t('quiz_title') }}</h2>
+            <p class="section-subtitle">{{ t('quiz_subtitle') }}</p>
+        </div>
+
+        <div id="quiz-questions-container">
+        </div>
+
+        <div id="quiz-score-banner" class="quiz-score-banner">
+            <h3 style="font-size: 1.8rem; margin-bottom: 12px;">Quiz Complete!</h3>
+            <p id="quiz-score-text" style="font-size: 1.25rem; line-height: 1.6; margin-bottom: 24px;"></p>
+            <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+                <button type="button" onclick="location.reload()" class="btn btn-outline" style="border-color:#FFFFFF; color:#FFFFFF !important;">
+                    &#8635; {{ t('btn_retake_quiz') }}
+                </button>
+                <a href="{{ url_for('request_help') }}" class="btn btn-accent">
+                    &#129309; {{ t('btn_request_help') }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

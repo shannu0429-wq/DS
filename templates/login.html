@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div class="form-card">
+        <div class="form-header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="DigitalSaathi" style="height: 70px; margin: 0 auto 16px auto;">
+            <h1>{{ t('nav_login') }}</h1>
+            <p>
+                {% if lang == 'te' %}
+                    మీ డిజిటల్ సాథీ ఖాతాలోకి సురక్షితంగా ప్రవేశించండి
+                {% else %}
+                    Sign in safely to your DigitalSaathi account
+                {% endif %}
+            </p>
+        </div>
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="email" class="form-label">{{ t('form_email') }}</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="name@example.com" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">{{ t('form_password') }}</label>
+                <input type="password" id="password" name="password" class="form-control" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">{{ t('nav_login') }}</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <p style="font-size: 1.05rem;">
+                {% if lang == 'te' %}
+                    ఖాతా లేదా? <a href="{{ url_for('register') }}" style="font-weight: 700;">ఇక్కడ నమోదు చేసుకోండి</a>
+                {% else %}
+                    Don't have an account yet? <a href="{{ url_for('register') }}" style="font-weight: 700;">Register Here</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

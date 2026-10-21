@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div class="form-card" style="max-width: 760px;">
+        <div class="form-header">
+            <span class="status-badge badge-assigned" style="font-size: 0.95rem; margin-bottom: 8px;">
+                {% if lang == 'te' %}వ్యక్తిగత సహాయం{% else %}Personal Assistance{% endif %}
+            </span>
+            <h1>{{ t('btn_request_help') }}</h1>
+            <p>
+                {% if lang == 'te' %}
+                    స్మార్ట్‌ఫోన్ లేదా ఆన్‌లైన్ చెల్లింపుల సమస్యపై మా విద్యార్థి వాలంటీర్ సహాయం పొందండి.
+                {% else %}
+                    Submit your request and a dedicated VVIT student volunteer will assist you patiently over call or in-person.
+                {% endif %}
+            </p>
+        </div>
+
+        <form method="POST" action="{{ url_for('request_help') }}">
+            <div class="form-group">
+                <label for="subject" class="form-label">{{ t('form_subject') }} *</label>
+                <input type="text" id="subject" name="subject" class="form-control" placeholder="e.g. Need help resizing WhatsApp fonts or setting up voice call" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description" class="form-label">{{ t('form_description') }} *</label>
+                <textarea id="description" name="description" class="form-control" placeholder="Please describe the issue in simple words. For example: My phone screen turns off too quickly..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="preferred_contact_method" class="form-label">{{ t('form_contact_method') }} *</label>
+                <select id="preferred_contact_method" name="preferred_contact_method" class="form-control" required>
+                    <option value="Phone Call">Phone Call (ఫోన్ కాల్)</option>
+                    <option value="WhatsApp">WhatsApp (వాట్సాప్ సందేశం)</option>
+                    <option value="SMS">SMS (సాధారణ ఎస్సెమ్మెస్)</option>
+                    <option value="In-Person">In-Person Home Visit (ప్రత్యక్షంగా కలవడం)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="preferred_contact_time" class="form-label">{{ t('form_contact_time') }}</label>
+                <input type="text" id="preferred_contact_time" name="preferred_contact_time" class="form-control" placeholder="e.g. Morning 10 AM to 12 PM or Evening 4 PM">
+            </div>
+
+            <button type="submit" class="btn btn-accent btn-lg" style="width: 100%; margin-top: 10px;">
+                &#10004; {{ t('btn_submit') }}
+            </button>
+        </form>
+
+        <div style="margin-top: 30px; text-align: center; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <a href="{{ url_for('help_history') }}" class="btn btn-outline btn-sm">
+                {% if lang == 'te' %}నా మునుపటి అభ్యర్థనల చరిత్ర చూడండి{% else %}View My Request History{% endif %} &rarr;
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

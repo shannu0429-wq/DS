@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div style="background: linear-gradient(135deg, #1565C0 0%, #0D47A1 100%); color: #FFFFFF; border-radius: var(--radius-lg); padding: 36px 30px; margin-bottom: 32px; box-shadow: var(--shadow-md);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <span class="status-badge" style="background: rgba(255,255,255,0.2); color: #FFFFFF; border: 1px solid rgba(255,255,255,0.4); margin-bottom: 8px;">
+                    {{ t('role_senior') }}
+                </span>
+                <h1 style="font-size: 2.2rem; font-weight: 800; margin-bottom: 8px;">
+                    {% if lang == 'te' %}
+                        స్వాగతం, {{ user_name }} గారు!
+                    {% else %}
+                        Welcome, {{ user_name }}!
+                    {% endif %}
+                </h1>
+                <p style="font-size: 1.15rem; color: #E3F2FD;">
+                    {% if lang == 'te' %}
+                        మీ డిజిటల్ అభ్యాస పురోగతి మరియు సహాయ అభ్యర్థనలు ఇక్కడ ఉన్నాయి.
+                    {% else %}
+                        Here is your personalized smartphone learning progress and volunteer support center.
+                    {% endif %}
+                </p>
+            </div>
+            <div>
+                <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-lg">&#129309; {{ t('btn_request_help') }}</a>
+            </div>
+        </div>
+
+        <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center; font-weight: 700; margin-bottom: 6px;">
+                <span>
+                    {% if lang == 'te' %}
+                        స్మార్ట్‌ఫోన్ అభ్యాస పురోగతి (పూర్తయిన పాఠాలు: {{ completed_tutorials }} / {{ total_tutorials }})
+                    {% else %}
+                        Smartphone Learning Progress ({{ completed_tutorials }} of {{ total_tutorials }} Completed)
+                    {% endif %}
+                </span>
+                <span style="font-size: 1.2rem; color: #FFE082;">{{ progress_percentage }}%</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar-fill" style="width: {{ progress_percentage }}%;">
+                    {% if progress_percentage > 10 %}{{ progress_percentage }}%{% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-grid">
+        <div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="font-size: 1.6rem; color: var(--primary-dark);">{{ t('nav_tutorials') }}</h2>
+                <a href="{{ url_for('tutorials') }}" class="btn btn-outline btn-sm">{{ t('btn_start_learning') }} &rarr;</a>
+            </div>
+
+            <div class="cards-grid" style="grid-template-columns: 1fr; gap: 16px;">
+                {% for tut in tutorials %}
+                    <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-md); padding: 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px; box-shadow: var(--shadow-sm);">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                                {% if tut.is_completed %}
+                                    <span style="color: var(--success); font-weight: 800; font-size: 1.2rem;">&#10004;</span>
+                                    <span class="status-badge badge-resolved">{{ t('btn_completed') }}</span>
+                                {% else %}
+                                    <span class="status-badge badge-pending">
+                                        {% if lang == 'te' %}నేర్చుకోవాలి{% else %}To Learn{% endif %}
+                                    </span>
+                                {% endif %}
+                                <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">{{ tut.category.replace('_', ' ') }}</span>
+                            </div>
+                            <h3 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 4px;">
+                                {% if lang == 'te' %}{{ tut.title_te }}{% else %}{{ tut.title_en }}{% endif %}
+                            </h3>
+                            <p style="font-size: 0.95rem; color: var(--text-muted);">
+                                {% if lang == 'te' %}{{ tut.description_te }}{% else %}{{ tut.description_en }}{% endif %}
+                            </p>
+                        </div>
+                        <a href="{{ url_for('tutorial_detail', tutorial_id=tut.id) }}" class="btn btn-outline btn-sm" style="white-space: nowrap;">
+                            {{ t('btn_view_details') }} &rarr;
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div style="margin-top: 40px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="font-size: 1.6rem; color: var(--primary-dark);">
+                        {% if lang == 'te' %}నా సహాయ అభ్యర్థనలు{% else %}My Help Requests{% endif %}
+                    </h2>
+                    <a href="{{ url_for('help_history') }}" class="btn btn-outline btn-sm">
+                        {% if lang == 'te' %}పూర్తి చరిత్ర చూడండి{% else %}View Full History{% endif %} &rarr;
+                    </a>
+                </div>
+
+                {% if my_requests %}
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>{% if lang == 'te' %}తేదీ{% else %}Date{% endif %}</th>
+                                    <th>{{ t('form_subject') }}</th>
+                                    <th>{% if lang == 'te' %}పరిస్థితి{% else %}Status{% endif %}</th>
+                                    <th>{% if lang == 'te' %}కేటాయించిన వాలంటీర్{% else %}Assigned Volunteer{% endif %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for req in my_requests[:4] %}
+                                    <tr>
+                                        <td>{{ req.created_at.strftime('%d-%b-%Y') if req.created_at else '' }}</td>
+                                        <td><strong>{{ req.subject }}</strong></td>
+                                        <td>
+                                            {% if req.status == 'Pending' %}
+                                                <span class="status-badge badge-pending">{{ t('status_pending') }}</span>
+                                            {% elif req.status == 'Assigned' %}
+                                                <span class="status-badge badge-assigned">{{ t('status_assigned') }}</span>
+                                            {% elif req.status == 'In Progress' %}
+                                                <span class="status-badge badge-in-progress">{{ t('status_in_progress') }}</span>
+                                            {% elif req.status == 'Resolved' %}
+                                                <span class="status-badge badge-resolved">{{ t('status_resolved') }}</span>
+                                            {% else %}
+                                                <span class="status-badge badge-closed">{{ t('status_closed') }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if req.volunteer_name %}
+                                                {{ req.volunteer_name }} ({{ req.volunteer_mobile }})
+                                            {% else %}
+                                                <span style="color: var(--text-muted); font-style: italic;">
+                                                    {% if lang == 'te' %}కేటాయింపు పెండింగ్‌లో ఉంది{% else %}Awaiting Assignment{% endif %}
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div style="background: var(--bg-card); border: 2px dashed var(--border-color); border-radius: var(--radius-md); padding: 30px; text-align: center;">
+                        <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 16px;">
+                            {% if lang == 'te' %}మీరు ఇంకా ఎటువంటి సహాయ అభ్యర్థనలను సమర్పించలేదు.{% else %}You have not submitted any help requests yet.{% endif %}
+                        </p>
+                        <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-sm">{{ t('btn_request_help') }}</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div>
+            <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); margin-bottom: 24px;">
+                <h3 style="font-size: 1.3rem; color: var(--primary-dark); margin-bottom: 16px;">
+                    {% if lang == 'te' %}త్వరిత సహాయ అభ్యర్థన{% else %}Quick Help Request{% endif %}
+                </h3>
+                <form method="POST" action="{{ url_for('request_help') }}">
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="subject" class="form-label" style="font-size: 0.95rem;">{{ t('form_subject') }} *</label>
+                        <input type="text" id="subject" name="subject" class="form-control" placeholder="e.g. Cannot open camera or WhatsApp" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="description" class="form-label" style="font-size: 0.95rem;">{{ t('form_description') }} *</label>
+                        <textarea id="description" name="description" class="form-control" style="min-height: 80px;" placeholder="Tell us what problem you are facing..." required></textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="preferred_contact_method" class="form-label" style="font-size: 0.95rem;">{{ t('form_contact_method') }}</label>
+                        <select id="preferred_contact_method" name="preferred_contact_method" class="form-control">
+                            <option value="Phone Call">Phone Call</option>
+                            <option value="WhatsApp">WhatsApp</option>
+                            <option value="SMS">SMS</option>
+                            <option value="In-Person">In-Person Visit</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="preferred_contact_time" class="form-label" style="font-size: 0.95rem;">{{ t('form_contact_time') }}</label>
+                        <input type="text" id="preferred_contact_time" name="preferred_contact_time" class="form-control" placeholder="e.g. Morning 10 AM">
+                    </div>
+
+                    <button type="submit" class="btn btn-accent btn-sm" style="width: 100%;">{{ t('btn_submit') }}</button>
+                </form>
+            </div>
+
+            <div style="background: #FFF3E0; border: 2px solid #FFE0B2; border-radius: var(--radius-lg); padding: 24px;">
+                <h3 style="font-size: 1.2rem; color: #BF360C; margin-bottom: 12px;">&#128737; {{ t('card_payment_title') }}</h3>
+                <p style="font-size: 0.95rem; color: #5D4037; line-height: 1.5; margin-bottom: 16px;">
+                    {% if lang == 'te' %}
+                        గుర్తుంచుకోండి: మీ బ్యాంక్ ఖాతాకు డబ్బులు రావడానికి UPI పిన్ లేదా OTP ఎప్పుడూ అవసరం లేదు!
+                    {% else %}
+                        Golden Rule: Receiving money into your bank account NEVER requires entering your UPI PIN or OTP!
+                    {% endif %}
+                </p>
+                <a href="{{ url_for('payment_safety') }}" class="btn btn-outline btn-sm" style="width: 100%; border-color: #BF360C; color: #BF360C !important;">
+                    {{ t('btn_view_details') }} &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

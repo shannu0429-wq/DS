@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero-section">
+    <div class="hero-grid">
+        <div class="hero-text-block">
+            <span class="hero-badge">Community Service Project</span>
+            <h1 class="hero-heading">{{ t('tagline') }}</h1>
+            <p class="hero-description">{{ t('sub_tagline') }}</p>
+            <div class="hero-actions">
+                <a href="{{ url_for('tutorials') }}" class="btn btn-primary btn-lg">{{ t('btn_start_learning') }}</a>
+                <a href="{{ url_for('payment_safety') }}" class="btn btn-outline btn-lg">{{ t('btn_stay_safe') }}</a>
+                <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-lg">{{ t('btn_request_help') }}</a>
+            </div>
+        </div>
+        <div class="hero-image-card">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="DigitalSaathi Helping Senior Citizens">
+            <div style="margin-top: 16px; font-weight: 700; color: var(--primary-dark); font-size: 1.15rem;">
+                {% if lang == 'te' %}
+                    సీనియర్లకు సాంకేతిక నేస్తం — డిజిటల్ సాథీ
+                {% else %}
+                    Friendly Tech Companion for Senior Citizens
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="content-container">
+    <div class="section-title-wrap">
+        <h2 class="section-title">{{ t('feature_title') }}</h2>
+        <p class="section-subtitle">{{ t('feature_subtitle') }}</p>
+    </div>
+
+    <div class="cards-grid">
+        <div class="feature-card">
+            <div class="feature-icon-wrapper">&#128241;</div>
+            <h3>{{ t('card_smartphone_title') }}</h3>
+            <p>{{ t('card_smartphone_desc') }}</p>
+            <a href="{{ url_for('tutorials') }}" class="btn btn-outline btn-sm">{{ t('btn_start_learning') }} &rarr;</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-wrapper" style="background:#FFF3E0; color:#E65100;">&#128179;</div>
+            <h3>{{ t('card_payment_title') }}</h3>
+            <p>{{ t('card_payment_desc') }}</p>
+            <a href="{{ url_for('payment_safety') }}" class="btn btn-outline btn-sm">{{ t('btn_view_details') }} &rarr;</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-wrapper" style="background:#FFEBEE; color:#C62828;">&#128737;</div>
+            <h3>{{ t('card_scam_title') }}</h3>
+            <p>{{ t('card_scam_desc') }}</p>
+            <a href="{{ url_for('scam_awareness') }}" class="btn btn-outline btn-sm">{{ t('btn_take_quiz') }} &rarr;</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon-wrapper" style="background:#E8F5E9; color:#2E7D32;">&#129309;</div>
+            <h3>{{ t('card_volunteer_title') }}</h3>
+            <p>{{ t('card_volunteer_desc') }}</p>
+            <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-sm">{{ t('btn_request_help') }} &rarr;</a>
+        </div>
+    </div>
+</section>
+
+<section class="stats-section">
+    <div class="section-title-wrap" style="color: #FFFFFF; margin-bottom: 24px;">
+        <h2 class="section-title" style="color: #FFFFFF;">{{ t('impact_title') }}</h2>
+        <p class="section-subtitle" style="color: #E3F2FD;">
+            {% if lang == 'te' %}
+                మా క్షేత్రస్థాయి పరిశోధన మరియు ప్రత్యక్ష కమ్యూనిటీ సర్వీస్ ద్వారా సాధించిన ఫలితాలు
+            {% else %}
+                Real progress achieved through field surveys, elder visits, and digital workshops
+            {% endif %}
+        </p>
+    </div>
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-number">{{ seniors_count }}</div>
+            <div class="stat-label">{{ t('stat_seniors_helped') }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">{{ tutorials_count }}</div>
+            <div class="stat-label">{{ t('stat_tutorials_completed') }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">{{ resolved_count }}</div>
+            <div class="stat-label">{{ t('stat_requests_resolved') }}</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">{{ volunteers_count }}</div>
+            <div class="stat-label">{{ t('stat_active_volunteers') }}</div>
+        </div>
+    </div>
+</section>
+
+<section class="content-container">
+    <div class="section-title-wrap">
+        <h2 class="section-title">{{ t('how_it_works_title') }}</h2>
+        <p class="section-subtitle">
+            {% if lang == 'te' %}
+                సంక్లిష్టమైన సాంకేతిక పదాలు లేకుండా, చాలా సులభంగా నేర్చుకునే మార్గం.
+            {% else %}
+                Learning digital literacy is relaxed, safe, and supported at every step.
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="how-it-works-grid">
+        <div class="step-card">
+            <span class="step-badge">Step 1</span>
+            <h3>{{ t('how_step1_title') }}</h3>
+            <p>{{ t('how_step1_desc') }}</p>
+        </div>
+        <div class="step-card">
+            <span class="step-badge" style="background:#E3F2FD; color:#1565C0;">Step 2</span>
+            <h3>{{ t('how_step2_title') }}</h3>
+            <p>{{ t('how_step2_desc') }}</p>
+        </div>
+        <div class="step-card">
+            <span class="step-badge" style="background:#E8F5E9; color:#2E7D32;">Step 3</span>
+            <h3>{{ t('how_step3_title') }}</h3>
+            <p>{{ t('how_step3_desc') }}</p>
+        </div>
+    </div>
+</section>
+
+<section class="content-container" style="background: #FFFFFF; border-radius: var(--radius-lg); padding: 40px 24px; margin-bottom: 40px; border: 1px solid var(--border-color);">
+    <div class="section-title-wrap">
+        <h2 class="section-title">{{ t('activities_title') }}</h2>
+        <p class="section-subtitle">{{ t('activities_subtitle') }}</p>
+    </div>
+
+    <div class="activities-grid">
+        <div class="activity-photo-card">
+            <img src="{{ url_for('static', filename='images/activities/activity1.jpeg') }}" alt="Senior citizen learning smartphone">
+            <div class="activity-caption">
+                {% if lang == 'te' %}
+                    సీనియర్ పౌరుడితో ఒకరితో ఒకరు స్మార్ట్‌ఫోన్ శిక్షణ
+                {% else %}
+                    One-on-one smartphone guidance with elderly resident
+                {% endif %}
+            </div>
+        </div>
+        <div class="activity-photo-card">
+            <img src="{{ url_for('static', filename='images/activities/activity2.jpeg') }}" alt="Volunteer demonstrating app installation">
+            <div class="activity-caption">
+                {% if lang == 'te' %}
+                    వాలంటీర్ ద్వారా సురక్షిత యాప్ ఇన్‌స్టాలేషన్ ప్రదర్శన
+                {% else %}
+                    Student volunteer demonstrating safe app installation
+                {% endif %}
+            </div>
+        </div>
+        <div class="activity-photo-card">
+            <img src="{{ url_for('static', filename='images/activities/activity3.jpeg') }}" alt="Explaining UPI fraud prevention">
+            <div class="activity-caption">
+                {% if lang == 'te' %}
+                    UPI సైబర్ మోసాల నివారణపై సీనియర్లకు అవగాహన
+                {% else %}
+                    Explaining UPI cyber fraud prevention & OTP safety
+                {% endif %}
+            </div>
+        </div>
+        <div class="activity-photo-card">
+            <img src="{{ url_for('static', filename='images/activities/activity4.jpeg') }}" alt="Community service interaction session">
+            <div class="activity-caption">
+                {% if lang == 'te' %}
+                    స్థానిక పరిసరాల్లో కమ్యూనిటీ సర్వీస్ ఫీల్డ్ వర్క్
+                {% else %}
+                    Community Service Project field survey in local neighborhood
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

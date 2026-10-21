@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div style="max-width: 860px; margin: 0 auto;">
+        <div style="margin-bottom: 24px;">
+            <a href="{{ url_for('tutorials') }}" class="btn btn-outline btn-sm">&larr; {{ t('btn_back') }}</a>
+        </div>
+
+        <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 40px; box-shadow: var(--shadow-md);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+                <span class="status-badge badge-assigned" style="font-size: 0.95rem;">
+                    {{ tutorial.category.replace('_', ' ').title() }}
+                </span>
+                {% if is_completed %}
+                    <span class="status-badge badge-resolved" style="font-size: 0.95rem;">
+                        &#10004; {{ t('btn_completed') }}
+                    </span>
+                {% endif %}
+            </div>
+
+            <h1 style="font-size: 2.2rem; color: var(--primary-dark); margin-bottom: 16px; line-height: 1.3;">
+                {% if lang == 'te' %}{{ tutorial.title_te }}{% else %}{{ tutorial.title_en }}{% endif %}
+            </h1>
+
+            <div style="font-size: 1.2rem; color: var(--text-muted); padding-bottom: 24px; border-bottom: 2px solid var(--border-color); margin-bottom: 30px;">
+                {% if lang == 'te' %}{{ tutorial.description_te }}{% else %}{{ tutorial.description_en }}{% endif %}
+            </div>
+
+            <div style="font-size: 1.15rem; line-height: 1.8; color: var(--text-main); margin-bottom: 40px;">
+                {% if lang == 'te' %}
+                    {{ tutorial.content_te | safe }}
+                {% else %}
+                    {{ tutorial.content_en | safe }}
+                {% endif %}
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; padding-top: 24px; border-top: 2px solid var(--border-color);">
+                {% if is_auth %}
+                    {% if not is_completed %}
+                        <form method="POST" action="{{ url_for('complete_tutorial', tutorial_id=tutorial.id) }}">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                &#10004; {{ t('btn_mark_completed') }}
+                            </button>
+                        </form>
+                    {% else %}
+                        <div style="color: var(--success); font-weight: 700; font-size: 1.15rem;">
+                            &#10004; {% if lang == 'te' %}ఈ పాఠాన్ని మీరు విజయవంతంగా పూర్తి చేశారు!{% else %}You have completed this tutorial!{% endif %}
+                        </div>
+                    {% endif %}
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-primary btn-sm">
+                        {% if lang == 'te' %}పురోగతి నమోదు చేయడానికి లాగిన్ అవ్వండి{% else %}Log in to track completion{% endif %}
+                    </a>
+                {% endif %}
+
+                <a href="{{ url_for('request_help') }}" class="btn btn-accent btn-sm">
+                    &#129309; {{ t('btn_request_help') }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div style="margin-bottom: 24px;">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline btn-sm">&larr; Back to Admin Dashboard</a>
+        <h1 style="font-size: 2rem; color: var(--primary-dark); margin-top: 10px;">Tutorial & Content Management</h1>
+        <p style="color: var(--text-muted);">Publish, edit, and maintain bilingual learning modules for senior citizens.</p>
+    </div>
+
+    <div style="background: var(--bg-card); border: 2px solid var(--border-color); border-radius: var(--radius-lg); padding: 32px; box-shadow: var(--shadow-sm); margin-bottom: 40px;">
+        <h2 style="font-size: 1.5rem; color: var(--primary); margin-bottom: 20px;">Create New Bilingual Tutorial</h2>
+
+        <form method="POST" action="{{ url_for('manage_tutorials') }}">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 20px;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="category" class="form-label">Category *</label>
+                    <select id="category" name="category" class="form-control" required>
+                        <option value="smartphone_basics">Smartphone Basics (స్మార్ట్‌ఫోన్ ప్రాథమిక అంశాలు)</option>
+                        <option value="digital_payments">Digital Payments (డిజిటల్ చెల్లింపులు)</option>
+                        <option value="scam_awareness">Scam Awareness (మోసాలపై అవగాహన)</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="display_order" class="form-label">Display Order *</label>
+                    <input type="number" id="display_order" name="display_order" class="form-control" value="10" required>
+                </div>
+            </div>
+
+            <div class="two-col-grid" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label for="title_en" class="form-label">Title (English) *</label>
+                    <input type="text" id="title_en" name="title_en" class="form-control" placeholder="e.g. How to use WhatsApp voice calling" required>
+                </div>
+                <div class="form-group">
+                    <label for="title_te" class="form-label">Title (Telugu) *</label>
+                    <input type="text" id="title_te" name="title_te" class="form-control" placeholder="e.g. వాట్సాప్ వాయిస్ కాలింగ్ ఎలా ఉపయోగించాలి" required>
+                </div>
+            </div>
+
+            <div class="two-col-grid" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label for="description_en" class="form-label">Short Summary (English) *</label>
+                    <textarea id="description_en" name="description_en" class="form-control" style="min-height: 80px;" placeholder="Brief summary of the lesson..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="description_te" class="form-label">Short Summary (Telugu) *</label>
+                    <textarea id="description_te" name="description_te" class="form-control" style="min-height: 80px;" placeholder="ఈ పాఠం యొక్క సంక్షిప్త వివరణ..." required></textarea>
+                </div>
+            </div>
+
+            <div class="two-col-grid" style="margin-bottom: 20px;">
+                <div class="form-group">
+                    <label for="content_en" class="form-label">Full Step-by-Step Instructions (English) *</label>
+                    <textarea id="content_en" name="content_en" class="form-control" style="min-height: 140px;" placeholder="Step 1: Open app...<br>Step 2: Tap icon..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="content_te" class="form-label">Full Step-by-Step Instructions (Telugu) *</label>
+                    <textarea id="content_te" name="content_te" class="form-control" style="min-height: 140px;" placeholder="దశ 1: యాప్ తెరవండి...<br>దశ 2: గుర్తుపై నొక్కండి..." required></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg">Publish Tutorial</button>
+        </form>
+    </div>
+
+    <h2 style="font-size: 1.6rem; color: var(--primary-dark); margin-bottom: 16px;">Existing Tutorials List</h2>
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Category</th>
+                    <th>Title (English)</th>
+                    <th>Title (Telugu)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tut in tutorials %}
+                    <tr>
+                        <td><strong>{{ tut.display_order }}</strong></td>
+                        <td><span class="status-badge badge-assigned">{{ tut.category.replace('_', ' ') }}</span></td>
+                        <td>{{ tut.title_en }}</td>
+                        <td>{{ tut.title_te }}</td>
+                        <td>
+                            <div style="display: flex; gap: 8px;">
+                                <a href="{{ url_for('edit_tutorial', tutorial_id=tut.id) }}" class="btn btn-outline btn-sm" style="padding: 4px 10px; font-size: 0.85rem; min-height: 32px;">Edit</a>
+                                <form method="POST" action="{{ url_for('delete_tutorial', tutorial_id=tut.id) }}" onsubmit="return confirm('Are you sure you want to delete this tutorial?');" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm" style="padding: 4px 10px; font-size: 0.85rem; min-height: 32px;">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

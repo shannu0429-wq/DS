@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px;">
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline btn-sm">&larr; Back to Admin Dashboard</a>
+            <h1 style="font-size: 2rem; color: var(--primary-dark); margin-top: 10px;">User Account Management</h1>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="{{ url_for('manage_users') }}" class="btn btn-sm {% if not selected_role %}btn-primary{% else %}btn-outline{% endif %}">All Users</a>
+            <a href="{{ url_for('manage_users', role='senior') }}" class="btn btn-sm {% if selected_role == 'senior' %}btn-primary{% else %}btn-outline{% endif %}">Seniors</a>
+            <a href="{{ url_for('manage_users', role='volunteer') }}" class="btn btn-sm {% if selected_role == 'volunteer' %}btn-primary{% else %}btn-outline{% endif %}">Volunteers</a>
+            <a href="{{ url_for('manage_users', role='admin') }}" class="btn btn-sm {% if selected_role == 'admin' %}btn-primary{% else %}btn-outline{% endif %}">Admins</a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>Email Address</th>
+                    <th>Mobile</th>
+                    <th>Role</th>
+                    <th>Language</th>
+                    <th>Status</th>
+                    <th>Registered</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                    <tr>
+                        <td>{{ u.id }}</td>
+                        <td><strong>{{ u.full_name }}</strong></td>
+                        <td>{{ u.email }}</td>
+                        <td>{{ u.mobile_number }}</td>
+                        <td>
+                            {% if u.role == 'admin' %}
+                                <span class="status-badge" style="background:#EDE7F6; color:#4A148C; border:1px solid #D1C4E9;">Admin</span>
+                            {% elif u.role == 'volunteer' %}
+                                <span class="status-badge badge-resolved">Volunteer</span>
+                            {% else %}
+                                <span class="status-badge badge-assigned">Senior</span>
+                            {% endif %}
+                        </td>
+                        <td><span style="font-weight: 700; text-transform: uppercase;">{{ u.preferred_language }}</span></td>
+                        <td>
+                            {% if u.is_active %}
+                                <span class="status-badge badge-resolved">Active</span>
+                            {% else %}
+                                <span class="status-badge badge-closed">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ u.created_at.strftime('%d-%b-%Y') if u.created_at else '' }}</td>
+                        <td>
+                            {% if u.id != current_user.id %}
+                                <form method="POST" action="{{ url_for('toggle_user', user_id=u.id) }}" style="display:inline;">
+                                    {% if u.is_active %}
+                                        <button type="submit" class="btn btn-danger btn-sm" style="padding: 4px 10px; font-size: 0.85rem; min-height: 32px;">Deactivate</button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-success btn-sm" style="padding: 4px 10px; font-size: 0.85rem; min-height: 32px;">Activate</button>
+                                    {% endif %}
+                                </form>
+                            {% else %}
+                                <span style="font-size: 0.85rem; color: var(--text-muted);">Current Admin</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

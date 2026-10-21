@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container" style="text-align: center; padding: 60px 20px;">
+    <div style="font-size: 4rem; color: var(--danger); margin-bottom: 16px;">&#9888;</div>
+    <h1 style="font-size: 2.4rem; color: var(--primary-dark); margin-bottom: 12px;">500 — Server Error</h1>
+    <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 30px auto;">
+        {% if lang == 'te' %}
+            తాత్కాలిక సాంకేతిక సమస్య ఏర్పడింది. దయచేసి MySQL డేటాబేస్ సరిగ్గా నడుస్తుందో లేదో సరిచూసుకోండి.
+        {% else %}
+            A temporary internal error occurred. Please verify that your local MySQL service is running.
+        {% endif %}
+    </p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">&larr; {{ t('btn_back') }} {{ t('nav_home') }}</a>
+</div>
+{% endblock %}

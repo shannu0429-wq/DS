@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container" style="text-align: center; padding: 60px 20px;">
+    <div style="font-size: 4rem; color: var(--accent); margin-bottom: 16px;">&#128269;</div>
+    <h1 style="font-size: 2.4rem; color: var(--primary-dark); margin-bottom: 12px;">404 — Page Not Found</h1>
+    <p style="font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin: 0 auto 30px auto;">
+        {% if lang == 'te' %}
+            మీరు వెతుకుతున్న పేజీ అందుబాటులో లేదు లేదా తరలించబడింది.
+        {% else %}
+            The page you are looking for does not exist or may have been moved.
+        {% endif %}
+    </p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">&larr; {{ t('btn_back') }} {{ t('nav_home') }}</a>
+</div>
+{% endblock %}

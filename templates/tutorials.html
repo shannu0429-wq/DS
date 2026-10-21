@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div class="section-title-wrap">
+        <h1 class="section-title">{{ t('nav_tutorials') }}</h1>
+        <p class="section-subtitle">
+            {% if lang == 'te' %}
+                సులభమైన దశలవారీ వివరణలు, పెద్ద అక్షరాలు మరియు చిత్రాలతో స్మార్ట్‌ఫోన్ నేర్చుకోండి.
+            {% else %}
+                Carefully structured step-by-step guides designed for comfortable, relaxed learning.
+            {% endif %}
+        </p>
+    </div>
+
+    <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 32px;">
+        <a href="{{ url_for('tutorials') }}" class="btn btn-sm {% if not selected_category %}btn-primary{% else %}btn-outline{% endif %}">
+            {% if lang == 'te' %}అన్ని అంశాలు{% else %}All Topics{% endif %}
+        </a>
+        <a href="{{ url_for('tutorials', category='smartphone_basics') }}" class="btn btn-sm {% if selected_category == 'smartphone_basics' %}btn-primary{% else %}btn-outline{% endif %}">
+            {{ t('card_smartphone_title') }}
+        </a>
+        <a href="{{ url_for('tutorials', category='digital_payments') }}" class="btn btn-sm {% if selected_category == 'digital_payments' %}btn-primary{% else %}btn-outline{% endif %}">
+            {{ t('card_payment_title') }}
+        </a>
+        <a href="{{ url_for('tutorials', category='scam_awareness') }}" class="btn btn-sm {% if selected_category == 'scam_awareness' %}btn-primary{% else %}btn-outline{% endif %}">
+            {{ t('card_scam_title') }}
+        </a>
+    </div>
+
+    <div class="cards-grid">
+        {% for tut in tutorials %}
+            <div class="feature-card">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <span class="status-badge badge-assigned" style="text-transform: capitalize;">
+                        {{ tut.category.replace('_', ' ') }}
+                    </span>
+                    {% if tut.is_completed %}
+                        <span class="status-badge badge-resolved">&#10004; {{ t('btn_completed') }}</span>
+                    {% endif %}
+                </div>
+                <h3>
+                    {% if lang == 'te' %}{{ tut.title_te }}{% else %}{{ tut.title_en }}{% endif %}
+                </h3>
+                <p>
+                    {% if lang == 'te' %}{{ tut.description_te }}{% else %}{{ tut.description_en }}{% endif %}
+                </p>
+                <a href="{{ url_for('tutorial_detail', tutorial_id=tut.id) }}" class="btn btn-primary btn-sm">
+                    {{ t('btn_start_learning') }} &rarr;
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

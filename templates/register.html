@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-container">
+    <div class="form-card">
+        <div class="form-header">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="DigitalSaathi" style="height: 70px; margin: 0 auto 16px auto;">
+            <h1>{{ t('nav_register') }}</h1>
+            <p>
+                {% if lang == 'te' %}
+                    సీనియర్ సిటిజన్ లేదా స్వచ్ఛంద సేవకుడిగా ఉచితంగా చేరండి
+                {% else %}
+                    Join as a Senior Citizen learner or a Student Volunteer
+                {% endif %}
+            </p>
+        </div>
+
+        <form method="POST" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label for="full_name" class="form-label">{{ t('form_full_name') }} *</label>
+                <input type="text" id="full_name" name="full_name" class="form-control" placeholder="e.g. Ramachandra Rao" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">{{ t('form_email') }} *</label>
+                <input type="email" id="email" name="email" class="form-control" placeholder="name@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="mobile_number" class="form-label">{{ t('form_mobile') }} *</label>
+                <input type="tel" id="mobile_number" name="mobile_number" class="form-control" placeholder="10-digit mobile number" pattern="[0-9]{10}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role" class="form-label">{{ t('form_role') }} *</label>
+                <select id="role" name="role" class="form-control" required>
+                    <option value="senior">{{ t('role_senior') }}</option>
+                    <option value="volunteer">{{ t('role_volunteer') }}</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="preferred_language" class="form-label">{{ t('form_preferred_lang') }}</label>
+                <select id="preferred_language" name="preferred_language" class="form-control">
+                    <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+                    <option value="te" {% if lang == 'te' %}selected{% endif %}>తెలుగు (Telugu)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">{{ t('form_password') }} *</label>
+                <input type="password" id="password" name="password" class="form-control" minlength="6" placeholder="At least 6 characters" required>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm_password" class="form-label">{{ t('form_confirm_password') }} *</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control" minlength="6" placeholder="Re-enter password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 10px;">{{ t('nav_register') }}</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+            <p style="font-size: 1.05rem;">
+                {% if lang == 'te' %}
+                    ఇప్పటికే ఖాతా ఉందా? <a href="{{ url_for('login') }}" style="font-weight: 700;">ఇక్కడ లాగిన్ అవ్వండి</a>
+                {% else %}
+                    Already have an account? <a href="{{ url_for('login') }}" style="font-weight: 700;">Log In</a>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
